@@ -15,7 +15,7 @@ Generally, this code has following features:
 
 ## 4.Running tests
 * **Preparation**  
-1. git clone https://github.com/princewang1994/TextSnake.pytorch.git  
+1. git clone https://github.com/anoycode22/DRRG.git  
 2. put your test images in "data/TD500/Test" or data/ctw1500/test/text_image
 3. put the pretrained model into ["model/TD500/"](https://github.com/anoycode22/DRRG/tree/master/model/TD500) or ["model/Ctw1500"](https://github.com/anoycode22/DRRG/tree/master/model/Ctw1500)
 
