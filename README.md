@@ -19,8 +19,9 @@ Generally, this code has following features:
  *  CTW1500 pretrained model: 
  *  TD500 pretrained model: 
 ## 6.Qualitative results
-![](https://github.com/anoycode22/DRRG/tree/master/result/2.jpg)  
-![](https://github.com/anoycode22/DRRG/tree/master/result/9.jpg)
+![td500_0](https://github.com/anoycode22/DRRG/tree/master/result/2.jpg)
+
+![td500_1](https://github.com/anoycode22/DRRG/tree/master/result/9.jpg)
   
 
 
