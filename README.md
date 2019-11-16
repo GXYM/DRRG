@@ -4,7 +4,7 @@
 **PyTorch 1.2.0**;   
 **Numpy >=1.16**;   
 **CUDA 10.1**;  
-**GCC >9.0**;   
+**GCC >=9.0**;   
 **NVIDIA GPU(with 10G or larger GPU memory for inference)**;   
 ## 2.Description  
 * Generally, this code has following features:  
@@ -23,6 +23,8 @@
 1. git clone https://github.com/anoycode22/DRRG.git  
 2. put your test images in "data/TD500/Test" or data/ctw1500/test/text_image
 3. put the pretrained model into ["model/TD500/"](https://github.com/anoycode22/DRRG/tree/master/model/TD500) or ["model/Ctw1500"](https://github.com/anoycode22/DRRG/tree/master/model/Ctw1500)
+4. cd ./csrc and make
+5. cd ./nmslib/lanms and make
 
 * **CTW1500**  
 1. set the parameter in [config](https://github.com/anoycode22/DRRG/tree/master/util/config.py) according to [model/Ctw1500/ctw1500_test.txt](https://github.com/anoycode22/DRRG/model/TD500/ctw1500_test.txt)
