@@ -9,14 +9,14 @@
 ## 2.Description  
 * Generally, this code has following features:  
   1.Just include complete inference code  
-  2.Support TD500 and CTW1500 dataset  
+  2.Support TD500 and CTW1500 datasets  
 ## 3.Parameter setting 
 * **CTW1500**: follow the [model/Ctw1500/ctw1500_test.txt](https://github.com/anoycode22/DRRG/model/TD500/ctw1500_test.txt)
 * **TD500**: follow the [model/TD500/TD500_test.txt](https://github.com/anoycode22/DRRG/model/Ctw1500/TD500_test.txt)
 
 ## 4.Pretrained Models
- *  CTW1500 pretrained model: 
- *  TD500 pretrained model: 
+ *  CTW1500 pretrained model: [CTW1500](https://drive.google.com/open?id=1cyAW7X4LESCJV6pEcSWw3BnXOnZSSPPC)
+ *  TD500 pretrained model: [TD500](https://drive.google.com/open?id=1WKFJsotug9qeuMxqnmgBbMPDR6CaujsM)
  
 ## 5.Running tests
 * **Preparation**  
