@@ -1,0 +1,5 @@
+tr: 0.675
+tcl:0.35
+clip = (4, 10)
+remove_mall = 50
+test_size:(512, 640)
