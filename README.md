@@ -16,20 +16,22 @@ Generally, this code has following features:
 ## 4.Running tests
 * **Preparation**  
 1. git clone https://github.com/princewang1994/TextSnake.pytorch.git  
-2. put the test image in "data/TD500/Test" or /data/ctw1500/test/text_image
+2. put your test images in "data/TD500/Test" or /data/ctw1500/test/text_image
 
 * **CTW1500**  
 1. set the parameter in [config](https://github.com/anoycode22/DRRG/tree/master/util/config.py) according to [model/Ctw1500/ctw1500_test.txt](https://github.com/anoycode22/DRRG/model/TD500/ctw1500_test.txt)
-2. python eval_TextGraph.py --exp_name Ctw1500 --test_size \(512, 1024\)
+2. python eval_TextGraph.py --exp_name Ctw1500 --test_size \\(512, 1024\\)
 
  * **TD500**  
  1. set the parameter in [config](https://github.com/anoycode22/DRRG/tree/master/util/config.py) according to [model/TD500/TD500_test.txt](https://github.com/anoycode22/DRRG/model/Ctw1500/TD500_test.txt)
- 2. python eval_TextGraph.py --exp_name TD500 --test_size \(512, 640\)
+ 2. python eval_TextGraph.py --exp_name TD500 --test_size \\(512, 640\\)
 
 ## 5.Pretrained Models
  *  CTW1500 pretrained model: 
  *  TD500 pretrained model: 
 ## 6.Qualitative results
+![image results](https://github.com/anoycode22/DRRG/tree/master/result/)
+
 ![td500_0](https://github.com/anoycode22/DRRG/tree/master/result/2.jpg)
 
 ![td500_1](https://github.com/anoycode22/DRRG/tree/master/result/9.jpg)
