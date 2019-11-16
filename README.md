@@ -16,14 +16,15 @@ Generally, this code has following features:
 ## 4.Running tests
 * **Clone Project**  
 git clone https://github.com/princewang1994/TextSnake.pytorch.git
+put the test image in "data/TD500/Test"
 
 * **CTW1500**  
 1. set the Parameter in [config](https://github.com/anoycode22/DRRG/tree/master/util/config.py) according to [model/Ctw1500/ctw1500_test.txt](https://github.com/anoycode22/DRRG/model/TD500/ctw1500_test.txt)
- 2. python eval_TextGraph.py --exp_name Ctw1500 --test_size (512, 1024)
+2. python eval_TextGraph.py --exp_name Ctw1500 --test_size \(512, 1024\)
 
  * **TD500**  
  1. set the Parameter in [config](https://github.com/anoycode22/DRRG/tree/master/util/config.py) according to [model/TD500/TD500_test.txt](https://github.com/anoycode22/DRRG/model/Ctw1500/TD500_test.txt)
- 2. python eval_TextGraph.py --exp_name TD500 --test_size (512, 640)
+ 2. python eval_TextGraph.py --exp_name TD500 --test_size \(512, 640\)
 
 ## 5.Pretrained Models
  *  CTW1500 pretrained model: 
