@@ -6,7 +6,7 @@
 **CUDA 10.1**;   
 **NVIDIA GPU(with 8G or larger GPU memory for inference)**;   
 ## 2.Description  
-Generally, this code has following features:  
+* Generally, this code has following features:  
   1.Just include complete inference code  
   2.Support TD500 and CTW1500 dataset  
 ## 3.Parameter setting 
