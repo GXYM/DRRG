@@ -12,6 +12,9 @@ Generally, this code has following features:
 ## 3.Parameter setting 
 * **TD500**: follow the [model/TD500/ctw1500_test.txt](https://github.com/anoycode22/DRRG/model/TD500/ctw1500_test.txt)
 * **CTW1500**: follow the [model/Ctw1500/TD500_test.txt](https://github.com/anoycode22/DRRG/model/Ctw1500/TD500_test.txt)
+
+## 4.Running tests
+## 5.Pretrained Models
   
 
 
