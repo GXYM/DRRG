@@ -16,7 +16,7 @@ Generally, this code has following features:
 ## 4.Running tests
 * **Preparation**  
 1. git clone https://github.com/princewang1994/TextSnake.pytorch.git  
-2. put the test image in "data/TD500/Test"
+2. put the test image in "data/TD500/Test" or /data/ctw1500/test/text_image
 
 * **CTW1500**  
 1. set the parameter in [config](https://github.com/anoycode22/DRRG/tree/master/util/config.py) according to [model/Ctw1500/ctw1500_test.txt](https://github.com/anoycode22/DRRG/model/TD500/ctw1500_test.txt)
