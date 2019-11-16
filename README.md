@@ -13,7 +13,11 @@ Generally, this code has following features:
 * **CTW1500**: follow the [model/Ctw1500/ctw1500_test.txt](https://github.com/anoycode22/DRRG/model/TD500/ctw1500_test.txt)
 * **TD500**: follow the [model/TD500/TD500_test.txt](https://github.com/anoycode22/DRRG/model/Ctw1500/TD500_test.txt)
 
-## 4.Running tests
+## 4.Pretrained Models
+ *  CTW1500 pretrained model: 
+ *  TD500 pretrained model: 
+ 
+## 5.Running tests
 * **Preparation**  
 1. git clone https://github.com/anoycode22/DRRG.git  
 2. put your test images in "data/TD500/Test" or data/ctw1500/test/text_image
@@ -27,9 +31,6 @@ Generally, this code has following features:
  1. set the parameter in [config](https://github.com/anoycode22/DRRG/tree/master/util/config.py) according to [model/TD500/TD500_test.txt](https://github.com/anoycode22/DRRG/model/Ctw1500/TD500_test.txt)
  2. python eval_TextGraph.py --exp_name TD500 --test_size \\(512, 640\\)
 
-## 5.Pretrained Models
- *  CTW1500 pretrained model: 
- *  TD500 pretrained model: 
 ## 6.Qualitative results
 ![image results](https://github.com/anoycode22/DRRG/tree/master/result/)
 
