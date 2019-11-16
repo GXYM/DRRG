@@ -14,9 +14,9 @@ Generally, this code has following features:
 * **TD500**: follow the [model/TD500/TD500_test.txt](https://github.com/anoycode22/DRRG/model/Ctw1500/TD500_test.txt)
 
 ## 4.Running tests
-* **Clone Project**  
-git clone https://github.com/princewang1994/TextSnake.pytorch.git
-put the test image in "data/TD500/Test"
+* **Preparation**  
+1. git clone https://github.com/princewang1994/TextSnake.pytorch.git  
+2 . put the test image in "data/TD500/Test"
 
 * **CTW1500**  
 1. set the Parameter in [config](https://github.com/anoycode22/DRRG/tree/master/util/config.py) according to [model/Ctw1500/ctw1500_test.txt](https://github.com/anoycode22/DRRG/model/TD500/ctw1500_test.txt)
