@@ -14,7 +14,11 @@ Generally, this code has following features:
 * **CTW1500**: follow the [model/Ctw1500/TD500_test.txt](https://github.com/anoycode22/DRRG/model/Ctw1500/TD500_test.txt)
 
 ## 4.Running tests
+
 ## 5.Pretrained Models
+ *  CTW1500 pretrained model: 
+ *  TD500 pretrained model: 
+## 6.Qualitative results
   
 
 
