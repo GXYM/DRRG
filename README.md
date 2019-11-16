@@ -2,7 +2,7 @@
 ## 1.Prerequisites  
 **python 3.7**;  
 **PyTorch 1.2.0**;   
-**Numpy >=1.16.4**;   
+**Numpy >=1.16**;   
 **CUDA 10.1**;   
 **NVIDIA GPU(with 8G or larger GPU memory for inference)**;   
 ## 2.Description  
