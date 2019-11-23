@@ -35,7 +35,7 @@
  1. set the parameter in [config](https://github.com/anoycode22/DRRG/tree/master/util/config.py) according to [model/TD500/TD500_test.txt](https://github.com/anoycode22/DRRG/model/Ctw1500/TD500_test.txt)
  2. python eval_TextGraph.py --exp_name TD500 --test_size \\(512, 640\\)
 
-## 6.Qualitative results
-![view result](https://github.com/anoycode22/DRRG/blob/master/result)
-![](https://github.com/anoycode22/DRRG/blob/master/result/ctw1500/1163_0.png)
-![](https://github.com/anoycode22/DRRG/blob/master/result/ctw1500/1163.png)
+## 6.Qualitative results(![view](https://github.com/anoycode22/DRRG/blob/master/result))  
+![](https://github.com/anoycode22/DRRG/blob/master/result/screenshot_1.png)
+
+![](https://github.com/anoycode22/DRRG/blob/master/result/screenshot_2.png)
