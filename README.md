@@ -1,4 +1,5 @@
 # Deep Relational Reasoning Graph Network for Arbitrary Shape Text Detection
+![](https://github.com/anoycode22/DRRG/blob/master/result/img2_0.png)
 ## 1.Prerequisites  
 **python 3.7**;  
 **PyTorch 1.2.0**;   
@@ -35,5 +36,6 @@
  2. python eval_TextGraph.py --exp_name TD500 --test_size \\(512, 640\\)
 
 ## 6.Qualitative results
-![image results](https://github.com/anoycode22/DRRG/tree/master/result/)
-![imag1](![image results](https://github.com/anoycode22/DRRG/blob/master/result/screenshot_1.png)
+![view result](https://github.com/anoycode22/DRRG/blob/master/result)
+![](https://github.com/anoycode22/DRRG/blob/master/result/ctw1500/1163_0.png)
+![](https://github.com/anoycode22/DRRG/blob/master/result/ctw1500/1163.png)
