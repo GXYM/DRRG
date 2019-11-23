@@ -36,3 +36,4 @@
 
 ## 6.Qualitative results
 ![image results](https://github.com/anoycode22/DRRG/tree/master/result/)
+![imag1](![image results](https://github.com/anoycode22/DRRG/blob/master/result/screenshot_1.png)
