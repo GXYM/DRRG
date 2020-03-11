@@ -38,4 +38,7 @@
 ## 6.Qualitative results(![view](https://github.com/anoycode22/DRRG/blob/master/result))  
 ![](https://github.com/anoycode22/DRRG/blob/master/result/screenshot_1.png)
 
-![](https://github.com/anoycode22/DRRG/blob/master/result/screenshot_22.png)
+![](https://github.com/anoycode22/DRRG/blob/master/result/screenshot_22.png)  
+
+## References  
+ (S. Zhang, X. Zhu, H.-J. Bo, C. Liu, C. Yang, H. Wang, and X.-C. Yin,  "Deep relational reasoning graph network for arbitrary shape text detection", CVPR 2020).
