@@ -1,4 +1,4 @@
-# References (S. Zhang, X. Zhu, H.-J. Bo, C. Liu, C. Yang, H. Wang, and X.-C. Yin,  "Deep relational reasoning graph network for arbitrary shape text detection", CVPR 2020).
+# References (S.-X. Zhang, X. Zhu, H.-J. Bo, C. Liu, C. Yang, H. Wang, and X.-C. Yin,  "Deep relational reasoning graph network for arbitrary shape text detection", CVPR 2020).
 ![](https://github.com/anoycode22/DRRG/blob/master/result/img2_0.png)
 ## 1.Prerequisites  
 **python 3.7**;  
