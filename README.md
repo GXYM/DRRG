@@ -1,4 +1,4 @@
-# Deep relational reasoning graph network for arbitrary shape text detection; CVPR 2020.
+ This is an implementation of our CVPR2020 paper. The complete code will be provided after returning to school.
 ![](https://github.com/anoycode22/DRRG/blob/master/result/img2_0.png)
 ## 1.Prerequisites  
 **python 3.7**;  
