@@ -1,5 +1,5 @@
- This is an implementation of our CVPR2020 paper. The complete code will be provided after returning to school.
-![](https://github.com/anoycode22/DRRG/blob/master/result/img2_0.png)
+ This is an implementation of our CVPR2020 paper. The complete code will be provided after returning to school. Please wait patiently!  
+[](https://github.com/anoycode22/DRRG/blob/master/result/img2_0.png)
 ## 1.Prerequisites  
 **python 3.7**;  
 **PyTorch 1.2.0**;   
