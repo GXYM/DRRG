@@ -41,4 +41,10 @@
 ![](https://github.com/anoycode22/DRRG/blob/master/result/screenshot_22.png)  
 
 ## References  
- (S. Zhang, X. Zhu, H.-J. Bo, C. Liu, C. Yang, H. Wang, and X.-C. Yin,  "Deep relational reasoning graph network for arbitrary shape text detection", CVPR 2020).
+@InProceedings{Zhang_2020_CVPR,
+author = {Zhang, Shi-Xue and Zhu, Xiaobin and Hou, Jie-Bo and Liu, Chang and Yang, Chun and Wang, Hongfa and Yin, Xu-Cheng},
+title = {Deep Relational Reasoning Graph Network for Arbitrary Shape Text Detection},
+booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+month = {June},
+year = {2020}
+}
