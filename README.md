@@ -1,4 +1,4 @@
- This is an implementation of “[Deep relational reasoning graph network for arbitrary shape text detection](http://arxiv.org/abs/2003.07493)”;  
+ This is an implementation of “[Deep relational reasoning graph network for arbitrary shape text detection](http://arxiv.org/abs/2003.07493)”.
 [](https://github.com/GXYM/DRRG/blob/master/result/img2_0.png)
 ## Prerequisites  
 **python 3.7**;  
