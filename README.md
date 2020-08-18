@@ -41,10 +41,10 @@ or
 python  batch_eval.py #  Testing multi round models 
 ```   
 
-## 6.Qualitative results(![view](https://github.com/anoycode22/DRRG/blob/master/result))  
-![](https://github.com/GXYM/DRRG/blob/master/result/screenshot_1.png)
+## 6.Qualitative results(![view](https://github.com/DRRG/DRRG/blob/master/result))  
+![screenshot1](https://github.com/GXYM/DRRG/blob/master/result/screenshot_1.png)
 
-![](https://github.com/GXYM/DRRG/blob/master/result/screenshot_22.png)  
+![screenshot](https://github.com/GXYM/DRRG/blob/master/result/screenshot_22.png)  
 
 ## References  
 @InProceedings{Zhang_2020_CVPR,
