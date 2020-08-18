@@ -23,6 +23,8 @@ config.lr = 1e-4
 # using GPU
 config.cuda = True
 
+config.k_at_hop1 = 10
+
 config.output_dir = 'output'
 
 config.input_size = 640
@@ -41,20 +43,22 @@ config.max_points = 20
 config.use_hard = True
 
 # demo tr threshold
-config.tr_thresh = 0.6
-# demo tcl threshold.6
-config.tcl_thresh = 0.4
-# link threshold 0.9
-config.link_thresh = 0.85
+config.tr_thresh = 0.8
+
+# demo tcl threshold
+config.tcl_thresh = 0.5
 
 # expand ratio in post processing
-config.expend = 0.15
+config.expend = -0.05 #0.15
 
-config.graph_link = True
+# k-n graph
+config.k_at_hop = [8, 8]
 
-config.remove_mall = 100
-config.clip = (4, 8)
+# unn connect
+config.active_connection = 3
 
+config.graph_link = False
+config.link_thresh = 0.85 #0.9
 
 def update_config(config, extra_config):
     for k, v in vars(extra_config).items():

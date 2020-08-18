@@ -1,6 +1,0 @@
-tr: 0.6
-tcl:0.4
-clip = (4, 8)
-remove_mall = 100
-test_size:(512, 1024)
-link_thresh: 0.85

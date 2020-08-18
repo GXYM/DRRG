@@ -34,8 +34,6 @@ def rescale_result(image, bbox_contours, H, W):
     for (cont, lines) in bbox_contours:
         cont[:, 0] = (cont[:, 0] * W / ori_W).astype(int)
         cont[:, 1] = (cont[:, 1] * H / ori_H).astype(int)
-        # lines[:, 0] = (lines[:, 0] * W / ori_W).astype(int)
-        # lines[:, 1] = (lines[:, 1] * H / ori_H).astype(int)
         contours.append(cont)
     return image, contours
 

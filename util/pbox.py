@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+__author__ = '古溪'
+
 import numpy as np
 from typing import List
 

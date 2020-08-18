@@ -3,6 +3,7 @@ import math
 import cv2
 import copy
 import numpy.random as random
+
 from shapely.geometry import Polygon
 
 
@@ -257,7 +258,7 @@ class RotatePadding(object):
     def __init__(self, up=60,colors=True):
         self.up = up
         self.colors = colors
-        self.ratio = 0.2
+        self.ratio = 0.5
 
     @staticmethod
     def rotate(center, pt, theta, movSize=[0, 0], scale=1):  # 二维图形学的旋转
@@ -655,8 +656,8 @@ class ResizeSquare(object):
         else:
             im_scale = 1.0
 
-        new_h = int(int(h * im_scale / 32) * 32)
-        new_w = int(int(w * im_scale / 32) * 32)
+        new_h = int(int(h * im_scale/32)*32)
+        new_w = int(int(w * im_scale/32)*32)
         image = cv2.resize(image, (new_w, new_h))
         scales = np.array([new_w / w, new_h / h])
         if polygons is not None:
@@ -727,7 +728,7 @@ class Augmentation(object):
             RandomResizeScale(size=self.size, ratio=(3. / 4, 5. / 2)),
             RandomCropFlip(),
             RandomResizedCrop(),
-            RotatePadding(colors=True),
+            RotatePadding(up=60, colors=True),
             # RandomResizePadding(size=self.size, random_scale=self.input_scale),
             ResizeLimitSquare(size=self.size),
             # RandomBrightness(),

@@ -45,11 +45,10 @@ class TextDetector(object):
     def detect_contours(self, bboxs, final_pred):
 
         bbox_contours = list()
-        bbox_list = list()
         for idx in range(0, int(np.max(final_pred)) + 1):
             fg = np.where(final_pred == idx)
             boxes = bboxs[fg, :8].reshape((-1, 4, 2)).astype(np.int32)
-            MBOX = boxes
+
             boundary_point = None
             if boxes.shape[0] > 1:
                 center = np.mean(boxes, axis=1).astype(np.int32).tolist()
@@ -74,13 +73,10 @@ class TextDetector(object):
 
             if boundary_point is None:
                 continue
-            try:
-                bbox_contours.append([boundary_point, np.array(np.stack([top, bot], axis=1))])
-                bbox_list.append(MBOX)
-            except:
-                continue
 
-        return bbox_contours, bbox_list
+            bbox_contours.append([boundary_point, np.array(np.stack([top, bot], axis=1))])
+
+        return bbox_contours
 
     def detect(self, image, img_show):
         # get model output
@@ -88,14 +84,13 @@ class TextDetector(object):
 
         contours = list()
         if edges is not None:
-            clusters = graph_propagation_naive(edges, scores, cfg.link_thresh, bboxs=None)
+            clusters = graph_propagation_naive(edges, scores, cfg.link_thresh)
             final_pred = clusters2labels(clusters, bboxs.shape[0])
             bboxs, final_pred = single_remove(bboxs, final_pred)
 
             # find text contours
-            contours, bbox_list = self.detect_contours(bboxs, final_pred)
-            if cfg.exp_name == "Ctw1500" or cfg.exp_name == "Total-text" :
-                contours = self.adjust_contours(img_show, contours) # carve data need
+            contours = self.detect_contours(bboxs, final_pred)
+            # contours = self.adjust_contours(img_show, contours)
 
         return contours, output
 

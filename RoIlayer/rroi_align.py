@@ -1,3 +1,4 @@
+# Copyright (c) Jianqi Ma, Inc. and its affiliates. All Rights Reserved.
 import torch
 from torch import nn
 from torch.autograd import Function

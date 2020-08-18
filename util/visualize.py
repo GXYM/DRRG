@@ -60,7 +60,6 @@ def visualize_detection(image, contours, tr=None, tcl=None):
     image_show = np.ascontiguousarray(image_show[:, :, ::-1])
 
     for idx, (boundary_point, line) in enumerate(contours):
-        cv2.drawContours(image_show, [boundary_point], -1, (0, 0, 255), 2)
         for ip, pp in enumerate(line):
             if ip == 0:
                 color_tp = (0, 255, 255)
@@ -73,4 +72,18 @@ def visualize_detection(image, contours, tr=None, tcl=None):
                 color_bt = (0, 255, 0)
             cv2.circle(image_show, (pp[0][0], pp[0][1]), 3, color_tp, -1)
             cv2.circle(image_show, (pp[1][0], pp[1][1]), 3, color_bt, -1)
-    return image_show
+
+        cv2.drawContours(image_show, [boundary_point], -1, (0, 0, 255), 2)
+    # cv2.imwrite("det_img643.jpg", image_show)
+    # cv2.imshow("det_img643.jpg", image_show)
+    # cv2.waitKey(0)
+
+    if (tr is not None) and (tcl is not None):
+        tr = (tr > cfg.tr_thresh).astype(np.uint8)
+        tcl = (tcl > cfg.tcl_thresh).astype(np.uint8)
+        tr = cv2.cvtColor(tr * 255, cv2.COLOR_GRAY2BGR)
+        tcl = cv2.cvtColor(tcl * 255, cv2.COLOR_GRAY2BGR)
+        image_show = np.concatenate([image_show, tr, tcl], axis=1)
+        return image_show
+    else:
+        return image_show

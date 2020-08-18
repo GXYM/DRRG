@@ -13,14 +13,14 @@ class Graph_RPN(object):
     def __init__(self, pooling, pst_dim):
         self.pst_dim = pst_dim
         self.NodePooling = pooling
-        self.k_at_hop = [8, 8]
-        self.active_connection = 3
+        self.k_at_hop = cfg.k_at_hop
+        self.active_connection = cfg.active_connection
         self.depth = len(self.k_at_hop)
 
         self.tr_thresh = cfg.tr_thresh
         self.tcl_thresh = cfg.tcl_thresh
         self.expend = cfg.expend + 1.0
-        self.clip = cfg.clip
+        self.clip = (4, 8)
 
     @staticmethod
     def PositionalEncoding(geo_map, model_dim):
@@ -49,6 +49,7 @@ class Graph_RPN(object):
         :param labels:
         :return:
         """
+        # hops[0] for 1-hop neighbors, hops[1] for 2-hop neighbors
         knn_graph = knn_graph[:, :self.k_at_hop[0] + 1]
         hops_list = list()
         one_hops_list = list()
@@ -58,6 +59,8 @@ class Graph_RPN(object):
 
             hops.append(set(knn_graph[center_idx][1:]))
             one_hops_list.append(set(knn_graph[center_idx][1:]))
+            # Actually we dont need the loop since the depth is fixed here,
+            # But we still remain the code for further revision
             for d in range(1, self.depth):
                 hops.append(set())
                 for h in hops[-2]:
@@ -154,8 +157,6 @@ class Graph_RPN(object):
 
             cv2.drawContours(reconstruct_mask, boxes, -1, 1, -1)
             if (reconstruct_mask * tr_pred_mask).sum() < reconstruct_mask.sum() * 0.5:
-                continue
-            if reconstruct_mask.sum() < 300:
                 continue
 
             if proposals is None:

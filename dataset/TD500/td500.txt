@@ -1,0 +1,37 @@
+# save to file
+                res_file = os.path.join(FLAGS.output_dir, 'res_{}.txt'.format(os.path.basename(im_fn).split('.')[0]))
+                with open(res_file, 'w') as f:
+                    if boxes is not None:
+                        for box in boxes:
+                            # to avoid submitting errors
+                            box = sort_poly(box.astype(np.int32))
+                            if np.linalg.norm(box[0] - box[1]) < 5 or np.linalg.norm(box[3]-box[0]) < 5:
+                                continue
+                            #cnt = np.array([[x1,y1],[x2,y2],[x3,y3],[x4,y4]])
+                            rect = cv2.minAreaRect(box)
+                            cx,cy = rect[0]
+                            w_,h_ = rect[1]
+                            mid_ = 0
+                            angle = rect[2]
+                            if angle > 45:
+                                angle = 90 - angle
+                                mid_ = w_; w_ = h_; h_ = mid_
+                            elif angle < -45:
+                                angle = 90 + angle
+                                mid_ = w_; w_ = h_; h_ = mid_
+                            angle = angle /180 * 3.141592653589
+                            
+                            
+                            x_min = int(cx - w_/2)
+                            x_max = int(cx + w_/2)
+                            y_min = int(cy - h_/2)
+                            y_max = int(cy + h_/2)
+                            f.write('{},{},{},{},{}\r\n'.format(x_min,y_min,x_max,y_max,angle))
+                            #f.write('{},{},{},{},{},{},{},{}\r\n'.format(
+                            #    box[0, 0], box[0, 1], box[1, 0], box[1, 1], box[2, 0], box[2, 1], box[3, 0], box[3, 1],
+                            #))
+                            cv2.polylines(im[:, :, ::-1], [box.astype(np.int32).reshape((-1, 1, 2))], True, color=(255, 255, 0), thickness=3)
+                if not FLAGS.no_write_images:
+                    img_path = os.path.join(FLAGS.output_dir, os.path.basename(im_fn))
+                    cv2.imwrite(img_path, im[:, :, ::-1])
+

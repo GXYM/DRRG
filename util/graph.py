@@ -81,7 +81,7 @@ def connected_components_constraint(nodes, max_sz, score_dict=None, th=None):
     return result, remain
 
 
-def graph_propagation_naive(edges, score, th, bboxs=None, dis_thresh=100, pool='avg'):
+def graph_propagation_naive(edges, score, th, bboxs=None, dis_thresh=50, pool='avg'):
 
     edges = np.sort(edges, axis=1)
 
@@ -306,3 +306,4 @@ def single_remove(bbox, pred):
     remain_idcs = [i for i in range(len(pred)) if not single_idcs[i]]
     remain_idcs = np.asarray(remain_idcs)
     return bbox[remain_idcs, :], pred[remain_idcs]
+

@@ -1,4 +1,9 @@
 #-*- coding:utf-8 -*-
+#####
+# Created on 19-9-20 上午10:05
+#
+# @Author: Greg Gao(laygin)
+#####
 import torch
 import torch.nn as nn
 from torch.autograd import Variable

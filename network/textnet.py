@@ -3,9 +3,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from layers import GCN
+from layers import KnnGraph
 from RoIlayer import RROIAlign
 from layers import Graph_RPN
 from network.vgg import VggNet
+from network.resnet import ResNet
 
 
 class UpBlok(nn.Module):
@@ -38,15 +40,27 @@ class FPN(nn.Module):
 
         if backbone == "vgg" or backbone == 'vgg_bn':
             if backbone == 'vgg_bn':
-                self.backbone = VggNet(name="vgg16_bn", pretrain=False)
+                self.backbone = VggNet(name="vgg16_bn", pretrain=True)
             elif backbone == 'vgg':
-                self.backbone = VggNet(name="vgg16", pretrain=False)
+                self.backbone = VggNet(name="vgg16", pretrain=True)
 
             self.deconv5 = nn.ConvTranspose2d(512, 256, kernel_size=4, stride=2, padding=1)
             self.merge4 = UpBlok(512 + 256, 128)
             self.merge3 = UpBlok(256 + 128, 64)
             self.merge2 = UpBlok(128 + 64, 32)
             self.merge1 = UpBlok(64 + 32, 32)
+
+        elif backbone == 'resnet50' or backbone == 'resnet101':
+            if backbone == 'resnet101':
+                self.backbone = ResNet(name="resnet101", pretrain=True)
+            elif backbone == 'resnet50':
+                self.backbone = ResNet(name="resnet50", pretrain=True)
+
+            self.deconv5 = nn.ConvTranspose2d(2048, 256, kernel_size=4, stride=2, padding=1)
+            self.merge4 = UpBlok(1024 + 256, 256)
+            self.merge3 = UpBlok(512 + 256, 128)
+            self.merge2 = UpBlok(256 + 128, 64)
+            self.merge1 = UpBlok(64 + 64, 32)
         else:
             print("backbone is not support !")
 
@@ -85,11 +99,15 @@ class TextNet(nn.Module):
         # ##class and regression branch
         self.out_channel = 8
         self.predict = nn.Sequential(
-            # nn.Conv2d(32, 16, kernel_size=3, stride=1, padding=1),
+            #nn.Conv2d(32, 16, kernel_size=3, stride=1, padding=1),
             nn.Conv2d(32, self.out_channel, kernel_size=1, stride=1, padding=0)
         )
 
-        self.graph = Graph_RPN(self.pooling, 120)
+        # ## gcn branch
+        if is_training:
+            self.graph = KnnGraph(self.k_at_hop, self.active_connection, self.pooling, 120, self.is_training)
+        else:
+            self.graph = Graph_RPN(self.pooling, 120)
 
     def load_model(self, model_path):
         print('Loading from {}'.format(model_path))

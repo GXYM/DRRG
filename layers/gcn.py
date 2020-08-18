@@ -1,3 +1,10 @@
+###################################################################
+# File Name: gcn.py
+# Author: Zhongdao Wang
+# mail: wcd17@mails.tsinghua.edu.cn
+# Created Time: Fri 07 Sep 2018 01:16:31 PM CST
+###################################################################
+
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
@@ -52,9 +59,10 @@ class GCN(nn.Module):
             nn.PReLU(output),
             nn.Linear(output, 2))
 
-    def forward(self, x, A, one_hop, train=True):
-
+    def forward(self, x, A, one_hop_idcs, train=True):
+        # data normalization l2 -> bn
         B, N, D = x.shape
+
         x = x.view(-1, D)
         x = self.bn0(x)
         x = x.view(B, N, D)
@@ -63,11 +71,13 @@ class GCN(nn.Module):
         x = self.conv2(x, A)
         x = self.conv3(x, A)
         x = self.conv4(x, A)
-        k1 = one_hop.size(-1)
+        k1 = one_hop_idcs.size(-1)
         dout = x.size(-1)
         edge_feat = torch.zeros(B, k1, dout).cuda()
         for b in range(B):
-            edge_feat[b, :, :] = x[b, one_hop[b]]
+            edge_feat[b, :, :] = x[b, one_hop_idcs[b]]
         edge_feat = edge_feat.view(-1, dout)
         pred = self.classifier(edge_feat)
+
+        # shape: (B*k1)x2
         return pred
