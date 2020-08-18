@@ -1,44 +1,49 @@
- This is an implementation of our CVPR2020 paper. The complete code will be provided after returning to school. Please wait patiently!  
-[](https://github.com/anoycode22/DRRG/blob/master/result/img2_0.png)
-## 1.Prerequisites  
+ This is an implementation of our CVPR2020 paper. !  
+[](https://github.com/GXYM/DRRG/blob/master/result/img2_0.png)
+## Prerequisites  
 **python 3.7**;  
 **PyTorch 1.2.0**;   
 **Numpy >=1.16**;   
 **CUDA 10.1**;  
 **GCC >=9.0**;   
 **NVIDIA GPU(with 10G or larger GPU memory for inference)**;   
-## 2.Description  
-* Generally, this code has following features:  
-  1.Just include complete inference code  
-  2.Support TD500 and CTW1500 datasets  
-## 3.Parameter setting 
-* **CTW1500**: follow the [model/Ctw1500/ctw1500_test.txt](https://github.com/anoycode22/DRRG/model/TD500/ctw1500_test.txt)
-* **TD500**: follow the [model/TD500/TD500_test.txt](https://github.com/anoycode22/DRRG/model/Ctw1500/TD500_test.txt)
 
-## 4.Pretrained Models
- *  CTW1500 pretrained model: [CTW1500](https://drive.google.com/open?id=1cyAW7X4LESCJV6pEcSWw3BnXOnZSSPPC)
- *  TD500 pretrained model: [TD500](https://drive.google.com/open?id=1WKFJsotug9qeuMxqnmgBbMPDR6CaujsM)
- 
-## 5.Running tests
-* **Preparation**  
-1. git clone https://github.com/anoycode22/DRRG.git  
-2. put your test images in "data/TD500/Test" or data/ctw1500/test/text_image
-3. put the pretrained model into ["model/TD500/"](https://github.com/anoycode22/DRRG/tree/master/model/TD500) or ["model/Ctw1500"](https://github.com/anoycode22/DRRG/tree/master/model/Ctw1500)
-4. cd ./csrc and make
-5. cd ./nmslib/lanms and make
+ ## Compile  
+```
+cd ./csrc and make
+cd ./nmslib/lanms and make
+```  
+## Data Links
+1. [CTW1500](https://drive.google.com/file/d/1A2s3FonXq4dHhD64A2NCWc8NQWMH2NFR/view?usp=sharing)   
+2. [TD500](https://drive.google.com/file/d/1ByluLnyd8-Ltjo9AC-1m7omZnI-FA1u0/view?usp=sharing)  
+3. [Total-Text](https://drive.google.com/file/d/17_7T_-2Bu3KSSg2OkXeCxj97TBsjvueC/view?usp=sharing)  
+Note:  download the data and put it under the data file 
 
-* **CTW1500**  
-1. set the parameter in [config](https://github.com/anoycode22/DRRG/tree/master/util/config.py) according to [model/Ctw1500/ctw1500_test.txt](https://github.com/anoycode22/DRRG/model/TD500/ctw1500_test.txt)
-2. python eval_TextGraph.py --exp_name Ctw1500 --test_size \\(512, 1024\\)
+## Train
+```
+cd tool
+sh train_CTW1500.sh # run or other shell script 
 
- * **TD500**  
- 1. set the parameter in [config](https://github.com/anoycode22/DRRG/tree/master/util/config.py) according to [model/TD500/TD500_test.txt](https://github.com/anoycode22/DRRG/model/Ctw1500/TD500_test.txt)
- 2. python eval_TextGraph.py --exp_name TD500 --test_size \\(512, 640\\)
+```   
+you should  modify the relevant training parameters according to the  environment， such as gpu_id and input_size:  
+```
+#!/bin/bash
+cd ../
+CUDA_LAUNCH_BLOCKING=1 python train_textsnake.py --exp_name Ctw1500 --max_epoch 600 --batch_size 6 --gpu 0 --input_size 640 --optim SGD --lr 0.001 --start_epoch 0 --viz --net vgg --resume pretrained/mlt2017_pretain/textsnake_vgg_100.pth
+```
+
+## Eval
+First, you can modify the relevant parameters in the [config.py](https://github.com/GXYM/DRRG/tree/master/util/config.py) and [option.py](https://github.com/GXYM/TextPMs/blob/master/util/option.py)
+```
+python  eval_TextGraph.py # Testing single round model 
+or 
+python  batch_eval.py #  Testing multi round models 
+```   
 
 ## 6.Qualitative results(![view](https://github.com/anoycode22/DRRG/blob/master/result))  
-![](https://github.com/anoycode22/DRRG/blob/master/result/screenshot_1.png)
+![](https://github.com/GXYM/DRRG/blob/master/result/screenshot_1.png)
 
-![](https://github.com/anoycode22/DRRG/blob/master/result/screenshot_22.png)  
+![](https://github.com/GXYM/DRRG/blob/master/result/screenshot_22.png)  
 
 ## References  
 @InProceedings{Zhang_2020_CVPR,
