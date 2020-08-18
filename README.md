@@ -1,4 +1,4 @@
- This is an implementation of our CVPR2020 paper. !  
+ This is an implementation of “[Deep relational reasoning graph network for arbitrary shape text detection](http://arxiv.org/abs/2003.07493)”;  
 [](https://github.com/GXYM/DRRG/blob/master/result/img2_0.png)
 ## Prerequisites  
 **python 3.7**;  
@@ -14,10 +14,11 @@ cd ./csrc and make
 cd ./nmslib/lanms and make
 ```  
 ## Data Links
+Note:  download the data and put it under the data file  
 1. [CTW1500](https://drive.google.com/file/d/1A2s3FonXq4dHhD64A2NCWc8NQWMH2NFR/view?usp=sharing)   
 2. [TD500](https://drive.google.com/file/d/1ByluLnyd8-Ltjo9AC-1m7omZnI-FA1u0/view?usp=sharing)  
 3. [Total-Text](https://drive.google.com/file/d/17_7T_-2Bu3KSSg2OkXeCxj97TBsjvueC/view?usp=sharing)  
-Note:  download the data and put it under the data file 
+
 
 ## Train
 ```
