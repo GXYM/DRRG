@@ -41,7 +41,7 @@ or
 python  batch_eval.py #  Testing multi round models 
 ```   
 
-## 6.Qualitative results(![view](https://github.com/DRRG/DRRG/blob/master/result))  
+## Qualitative results(![view](https://github.com/DRRG/DRRG/blob/master/result))  
 ![screenshot1](https://github.com/GXYM/DRRG/blob/master/result/screenshot_1.png)
 
 ![screenshot](https://github.com/GXYM/DRRG/blob/master/result/screenshot_22.png)  
@@ -53,4 +53,7 @@ title = {Deep Relational Reasoning Graph Network for Arbitrary Shape Text Detect
 booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
 month = {June},
 year = {2020}
-}
+}  
+## License
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/GXYM/DRRG/blob/master/LICENSE.md) file for details
+
