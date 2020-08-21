@@ -57,7 +57,7 @@ config.k_at_hop = [8, 8]
 # unn connect
 config.active_connection = 3
 
-config.graph_link = False
+config.graph_link = False  ### for Total-text icdar15 graph_link = False; forTD500 and CTW1500, graph_link = True
 config.link_thresh = 0.85 #0.9
 
 def update_config(config, extra_config):
