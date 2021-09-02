@@ -132,7 +132,7 @@ class KnnGraph(object):
         one_hops_bin = list()
         feat_bin = list()
         labels_bin = list()
-        gt_data = gt_data.numpy()
+        gt_data = gt_data.cpu().numpy()
         for bind in range(gt_data.shape[0]):
             roi_num = int(gt_data[bind, 0, 0])
             img_size = int(gt_data[bind, 0, 8])
