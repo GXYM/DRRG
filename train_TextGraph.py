@@ -9,7 +9,7 @@ import torch.backends.cudnn as cudnn
 import torch.utils.data as data
 from torch.optim import lr_scheduler
 
-from dataset import SynthText, TotalText, Ctw1500Text, Icdar15Text, Mlt2017Text, TD500Text
+from dataset import SynthText, TotalText, Ctw1500Text, Icdar15Text, Mlt2017Text, TD500Text , VietSceneText
 from network.loss import TextLoss
 from network.textnet import TextNet
 from util.augmentation import Augmentation
@@ -22,6 +22,9 @@ from util.summary import LogSummary
 from util.shedule import FixLR
 # import multiprocessing
 # multiprocessing.set_start_method("spawn", force=True)
+
+import warnings
+warnings.filterwarnings('ignore')
 
 lr = None
 train_step = 0
@@ -171,6 +174,14 @@ def main():
     elif cfg.exp_name == 'TD500':
         trainset = TD500Text(
             data_root='data/TD500',
+            is_training=True,
+            transform=Augmentation(size=cfg.input_size, mean=cfg.means, std=cfg.stds)
+        )
+        valset = None
+
+    elif cfg.exp_name == 'VietSceneText':
+        trainset = VietSceneText(
+            data_root='data/VietSceneText',
             is_training=True,
             transform=Augmentation(size=cfg.input_size, mean=cfg.means, std=cfg.stds)
         )
