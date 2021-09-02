@@ -35,8 +35,11 @@ def save_model(model, epoch, lr, optimzer):
     save_dir = os.path.join(cfg.save_dir, cfg.exp_name)
     if not os.path.exists(save_dir):
         mkdirs(save_dir)
-
-    save_path = os.path.join(save_dir, 'textgraph_{}_{}.pth'.format(model.backbone_name, epoch))
+    if cfg.mgpu:
+        model_name = model.module.backbone_name
+    else:
+        model_name = model.backbone_name
+    save_path = os.path.join(save_dir, 'textgraph_{}_{}.pth'.format(model_name , epoch))
     print('Saving to {}.'.format(save_path))
     state_dict = {
         'lr': lr,
