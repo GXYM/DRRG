@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-from layers import GCN
+from layers import GCN,GAT
 from layers import KnnGraph
 from RoIlayer import RROIAlign
 from layers import Graph_RPN
@@ -85,7 +85,7 @@ class FPN(nn.Module):
 
 class TextNet(nn.Module):
 
-    def __init__(self, backbone='vgg', is_training=True):
+    def __init__(self, backbone='vgg', is_training=True,use_atten=False):
         super().__init__()
         self.k_at_hop = [8, 4]
         self.post_dim = 120
@@ -93,7 +93,10 @@ class TextNet(nn.Module):
         self.is_training = is_training
         self.backbone_name = backbone
         self.fpn = FPN(self.backbone_name, self.is_training)
-        self.gcn_model = GCN(600, 32)  # 600 = 480 + 120
+        if use_atten:
+            self.gcn_model = GAT(nfeat = 600, nhid = 128, nclass= 2 , dropout= 0.2, alpha=0.1, nheads = 4)
+        else:
+            self.gcn_model = GCN(600, 32)  # 600 = 480 + 120
         self.pooling = RROIAlign((3, 4), 1.0 / 1)  # (32+8)*3*4 =480
 
         # ##class and regression branch

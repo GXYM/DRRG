@@ -40,6 +40,7 @@ class BaseOptions(object):
         self.parser.add_argument('--vis_dir', default='./vis/', help='Path to save visualization images')
         self.parser.add_argument('--log_dir', default='./logs/', help='Path to tensorboard log')
         self.parser.add_argument('--loss', default='CrossEntropyLoss', type=str, help='Training Loss')
+        self.parser.add_argument('--attn', default=False, type=str2bool, help='Use attention model')
         # self.parser.add_argument('--input_channel', default=1, type=int, help='number of input channels' )
         self.parser.add_argument('--pretrain', default=False, type=str2bool, help='Pretrained AutoEncoder model')
         self.parser.add_argument('--verbose', '-v', default=True, type=str2bool, help='Whether to output debug info')

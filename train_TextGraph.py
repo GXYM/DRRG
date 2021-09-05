@@ -29,10 +29,11 @@ warnings.filterwarnings('ignore')
 lr = None
 train_step = 0
 
+date = datetime.now().strftime("%H%M-%d%m%y")
 
 def save_model(model, epoch, lr, optimzer):
 
-    save_dir = os.path.join(cfg.save_dir, cfg.exp_name)
+    save_dir = os.path.join(cfg.save_dir, cfg.exp_name + date)
     if not os.path.exists(save_dir):
         mkdirs(save_dir)
     if cfg.mgpu:
