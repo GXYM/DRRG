@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
 import torch.utils.data as data
-from dataset import TotalText, Ctw1500Text, Icdar15Text, Mlt2017Text, TD500Text
+from dataset import TotalText, Ctw1500Text, Icdar15Text, Mlt2017Text, TD500Text, VietSceneText
 from network.textnet import TextNet
 from util.augmentation import BaseTransform
 from util.config import config as cfg, update_config, print_config
@@ -15,7 +15,7 @@ from util.misc import to_device, mkdirs, rescale_result
 from util.detection_mask import TextDetector as TextDetector_mask
 from util.detection_graph import TextDetector as TextDetector_graph
 from eval import deal_eval_total_text, deal_eval_ctw1500, deal_eval_icdar15, \
-    deal_eval_TD500, data_transfer_ICDAR, data_transfer_TD500, data_transfer_MLT2017
+    deal_eval_TD500, data_transfer_ICDAR, data_transfer_TD500, data_transfer_MLT2017, data_transfer_VietSceneText
 
 
 import multiprocessing
@@ -109,7 +109,9 @@ def inference(detector, test_loader, output_dir):
         elif cfg.exp_name == "TD500":
             fname = "res_img_" + meta['image_id'][idx].replace('jpg', 'txt')
             data_transfer_TD500(contours, os.path.join(output_dir, fname))
-
+        elif cfg.exp_name == "VietSceneText": 
+            fname = meta['image_id'][idx].replace('jpg', 'txt')
+            data_transfer_VietSceneText(contours, os.path.join(output_dir, fname))
         else:
             fname = meta['image_id'][idx].replace('jpg', 'txt')
             write_to_file(contours, os.path.join(output_dir, fname))
@@ -150,6 +152,12 @@ def main(vis_dir_path):
             is_training=False,
             transform=BaseTransform(size=cfg.test_size, mean=cfg.means, std=cfg.stds)
         )
+    elif cfg.exp_name == "VietSceneText":
+        testset = VietSceneText(
+            data_root='data/VietSceneText',
+            is_training=False,
+            transform=BaseTransform(size=cfg.test_size, mean=cfg.means, std=cfg.stds)
+        )        
     else:
         print("{} is not justify".format(cfg.exp_name))
 
@@ -157,8 +165,9 @@ def main(vis_dir_path):
 
     # Model
     model = TextNet(is_training=False, backbone=cfg.net)
-    model_path = os.path.join(cfg.save_dir, cfg.exp_name,
-                              'textgraph_{}_{}.pth'.format(model.backbone_name, cfg.checkepoch))
+    model_path = cfg.save_path
+    # model_path = os.path.join(cfg.save_dir, cfg.exp_name,
+    #                           'textgraph_{}_{}.pth'.format(model.backbone_name, cfg.checkepoch))
     model.load_model(model_path)
 
     # copy to cuda

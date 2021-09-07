@@ -215,5 +215,13 @@ def data_transfer_MLT2017(contours, res_file):
             f.write('{},{},{},{},{},{},{},{},{}\r\n'
                     .format(p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], 1))
 
-
+def data_transfer_VietSceneText(contours, res_file):
+    with open(res_file, 'w') as f:
+        for cont in contours:
+            rect = cv2.minAreaRect(cont)
+            points = cv2.boxPoints(rect)
+            points = np.int0(points)
+            p = np.reshape(points, -1)
+            f.write('{},{},{},{},{},{},{},{}\r\n'
+                    .format(p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7]))
 

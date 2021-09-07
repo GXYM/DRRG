@@ -84,6 +84,7 @@ class BaseOptions(object):
         self.parser.add_argument('--expend', default=-0.05, type=float, help='expend')
         # demo args
         self.parser.add_argument('--img_root', default=None, type=str, help='Path to deploy images')
+        self.parser.add_argument('--save_path', default=None, type=str, help='Path to save model')
 
 
     def parse(self, fixed=None):
