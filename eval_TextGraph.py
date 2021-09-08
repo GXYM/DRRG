@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
 import torch.utils.data as data
-from dataset import TotalText, Ctw1500Text, Icdar15Text, Mlt2017Text, TD500Text, VietSceneText
+from dataset import TotalText, Ctw1500Text, Icdar15Text, Mlt2017Text, TD500Text, VietSceneText, VinText
 from network.textnet import TextNet
 from util.augmentation import BaseTransform
 from util.config import config as cfg, update_config, print_config
@@ -157,7 +157,13 @@ def main(vis_dir_path):
             data_root='data/VietSceneText',
             is_training=False,
             transform=BaseTransform(size=cfg.test_size, mean=cfg.means, std=cfg.stds)
-        )        
+            )
+    elif cfg.exp_name == "VinText":
+        testset = VinText(
+            data_root='data/VinText',
+            is_training=False,
+            transform=BaseTransform(size=cfg.test_size, mean=cfg.means, std=cfg.stds)
+        )            
     else:
         print("{} is not justify".format(cfg.exp_name))
 

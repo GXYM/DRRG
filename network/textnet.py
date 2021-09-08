@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-from layers import GCN,GAT,GATLayer
+from layers import GCN,GAT
 from layers import KnnGraph
 from RoIlayer import RROIAlign
 from layers import Graph_RPN

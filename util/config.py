@@ -30,7 +30,7 @@ config.output_dir = 'output'
 config.input_size = 640
 
 # max polygon per image
-config.max_annotation = 200
+config.max_annotation = 500
 
 # max polygon per image
 # synText, total-text:600; CTW1500: 1200; icdar: ; MLT: ; TD500: .
