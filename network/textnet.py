@@ -94,8 +94,7 @@ class TextNet(nn.Module):
         self.backbone_name = backbone
         self.fpn = FPN(self.backbone_name, self.is_training)
         if use_atten:
-            # self.gcn_model = GAT(nfeat = 600, nhid = 128, nclass= 2 , dropout= 0.2, alpha=0.1, nheads = 4)
-            self.gcn_model = GATLayer(600,64,2)
+            self.gcn_model = GAT(nfeat = 600, nhid = 128, nclass= 2 , dropout= 0.2, alpha=0.1, nheads = 4)
         else:
             self.gcn_model = GCN(600, 32)  # 600 = 480 + 120
         self.pooling = RROIAlign((3, 4), 1.0 / 1)  # (32+8)*3*4 =480

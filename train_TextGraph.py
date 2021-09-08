@@ -9,7 +9,7 @@ import torch.backends.cudnn as cudnn
 import torch.utils.data as data
 from torch.optim import lr_scheduler
 
-from dataset import SynthText, TotalText, Ctw1500Text, Icdar15Text, Mlt2017Text, TD500Text , VietSceneText
+from dataset import SynthText, TotalText, Ctw1500Text, Icdar15Text, Mlt2017Text, TD500Text , VietSceneText, VinText
 from network.loss import TextLoss
 from network.textnet import TextNet
 from util.augmentation import Augmentation
@@ -190,7 +190,13 @@ def main():
             transform=Augmentation(size=cfg.input_size, mean=cfg.means, std=cfg.stds)
         )
         valset = None
-
+    elif cfg.exp_name == 'VinText':
+        trainset = VinText(
+            data_root='data/VinText',
+            is_training=True,
+            transform=Augmentation(size=cfg.input_size, mean=cfg.means, std=cfg.stds)
+        )
+        valset = None
     else:
         print("dataset name is not correct")
 
