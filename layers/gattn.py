@@ -39,8 +39,18 @@ class GraphAttentionLayer(nn.Module):
         self.agg = MeanAggregator()
 
     def forward(self, h, adj):
+        h = h.to(self.W.device)
+        adj = adj.to(self.W.device)
+        # print("===="*5)
+        # print('h.device',h.device)
+        # print('adj.device',adj.device)
+        # print('self.W.device',self.W.device)
+        # print("===="*5)
+    
         if self.concat:
-            GX = self.agg(h,adj)
+            GX = self.agg(h,adj).to(self.W.device)
+            # print('GX.device',GX.device)
+            # input()
             Wh = torch.einsum('ijk,ko->ijo', (GX, self.W))
         else:
             Wh = torch.einsum('ijk,ko->ijo', (h, self.W))

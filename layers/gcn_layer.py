@@ -111,7 +111,7 @@ class KnnGraph(object):
                 labels = torch.from_numpy(labels_gt[ips]).type(torch.long)
                 one_hop_labels = labels[one_hop_idcs]
                 edge_labels = ((labels_gt[center_idx] == one_hop_labels)
-                               & labels_gt[center_idx] > 0).long()
+                               & np.array(labels_gt[center_idx] > 0))
 
                 feat_batch.append(feat)
                 adj_batch.append(A_)
@@ -132,6 +132,7 @@ class KnnGraph(object):
         one_hops_bin = list()
         feat_bin = list()
         labels_bin = list()
+        device = feats.device
         gt_data = gt_data.cpu().numpy()
         for bind in range(gt_data.shape[0]):
             roi_num = int(gt_data[bind, 0, 0])
