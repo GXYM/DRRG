@@ -84,8 +84,13 @@ class GAT(nn.Module):
 
         self.out_att = GraphAttentionLayer(nhid * nheads, nclass, dropout=dropout, alpha=alpha, concat=False)
         self.agg = MeanAggregator()
+        self.predictor = nn.Sequential(
+            nn.Linear(nhid ,32),
+            nn.PReLU(32),
+            nn.Linear(32, nclass))
     def forward(self, X, adj,one_hop_idcs, train=True):
         B, N, D = X.shape
+        k1 = one_hop_idcs.size(-1)
 
 
         X = F.dropout(X, self.dropout, training=self.training)
@@ -95,5 +100,11 @@ class GAT(nn.Module):
         X = F.dropout(X, self.dropout, training=self.training)
 
         X = F.elu(self.out_att(X, adj))
-
+        
+        dout = X.size(-1)
+        edge_feat = torch.zeros(B, k1, dout).cuda()
+        for b in range(B):
+            edge_feat[b, :, :] = X[b, one_hop_idcs[b]]
+        edge_feat = edge_feat.view(-1, dout)
+        X = self.predictor(edge_feat)
         return X
