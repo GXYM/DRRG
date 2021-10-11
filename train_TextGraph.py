@@ -23,6 +23,22 @@ from util.shedule import FixLR
 # import multiprocessing
 # multiprocessing.set_start_method("spawn", force=True)
 
+from multiprocessing import process
+process.current_process()._config['tempdir'] =  '/dev/shm/'
+def find_free_port():
+    """ https://stackoverflow.com/questions/1365265/on-localhost-how-do-i-pick-a-free-port-number """
+    import socket
+    from contextlib import closing
+
+    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
+        s.bind(('', 0))
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        return str(s.getsockname()[1])
+
+import visdom
+vis = visdom.Visdom(port=7007,server='localhost',base_url='/visdom')
+vis.line([[0.] * 7], [0], win='train_loss', opts=dict(title='train_loss',
+                        legend=['total loss', 'tr_loss', 'tcl_loss', 'sin_loss', 'cos_loss', 'radii_loss', 'gcn_loss']))
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -69,7 +85,7 @@ def train(model, train_loader, criterion, scheduler, optimizer, epoch, logger):
     # scheduler.step()
 
     print('Epoch: {} : LR = {}'.format(epoch, scheduler.get_lr()))
-
+    loader_len = len(train_loader)
     for i, (img, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map, gt_roi) in enumerate(train_loader):
         data_time.update(time.time() - end)
 
@@ -119,7 +135,8 @@ def train(model, train_loader, criterion, scheduler, optimizer, epoch, logger):
                 'radii_loss': radii_loss.item(),
                 'gcn_loss:': gcn_loss.item()
             }, tag='train', n_iter=train_step)
-
+        vis.line([[loss.item(),tr_loss.item(),tcl_loss.item(),sin_loss.item(),cos_loss.item(),radii_loss.item(),gcn_loss.item()]], 
+        [i + loader_len * epoch], win='train_loss', update='append')
     if epoch % cfg.save_freq == 0:
         save_model(model, epoch, scheduler.get_lr(), optimizer)
 

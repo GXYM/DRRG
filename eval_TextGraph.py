@@ -20,7 +20,7 @@ from eval import deal_eval_total_text, deal_eval_ctw1500, deal_eval_icdar15, \
 
 import multiprocessing
 multiprocessing.set_start_method("spawn", force=True)
-
+multiprocessing.process.current_process()._config['tempdir'] =  '/dev/shm/'
 
 def osmkdir(out_dir):
     import shutil
