@@ -214,6 +214,13 @@ def main():
             transform=Augmentation(size=cfg.input_size, mean=cfg.means, std=cfg.stds)
         )
         valset = None
+    elif cfg.exp_name == 'VietST':
+        trainset = VietST(
+            data_root='/mlcv/WorkingSpace/Projects/SceneText/thuyentd/source/SynthText/results_synth_10k_jpg/',
+            is_training=True,
+            transform=Augmentation(size=cfg.input_size, mean=cfg.means, std=cfg.stds)
+        )
+        valset = None
     else:
         print("dataset name is not correct")
 

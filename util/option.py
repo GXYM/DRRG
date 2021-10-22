@@ -30,7 +30,7 @@ class BaseOptions(object):
         self.parser.add_argument('--exp_name', default="Ctw1500", type=str,
                                  choices=['Synthtext', 'Totaltext', 'Ctw1500',
                                           'Icdar2015', "MLT2017", 'TD500',
-                                          'VietSceneText','VinText'], help='Experiment name')
+                                          'VietSceneText','VinText','VietST'], help='Experiment name')
         self.parser.add_argument("--gpu", default="1", help="set gpu id", type=str)
         self.parser.add_argument('--resume', default=None, type=str, help='Path to target resume checkpoint')
         self.parser.add_argument('--num_workers', default=8, type=int, help='Number of workers used in dataloading')
