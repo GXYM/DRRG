@@ -14,7 +14,7 @@ from util.detection_graph import TextDetector as TextDetector_graph
 from eval_TextGraph import inference
 from network.loss import TextLoss
 from network.textnet import TextNet
-from util.augmentation import Augmentation
+from util.augmentation import BaseTransform,Augmentation
 from util.config import config as cfg, update_config, print_config
 from util.misc import AverageMeter
 from util.misc import mkdirs, to_device
@@ -232,6 +232,12 @@ def main():
     log_dir = os.path.join(cfg.log_dir, datetime.now().strftime('%b%d_%H-%M-%S_') + cfg.exp_name)
     logger = LogSummary(log_dir)
 
+    testset = VietSceneText(
+        data_root='data/VietSignboard_small_eval_100',
+        is_training=False,
+        transform=BaseTransform(size=cfg.test_size, mean=cfg.means, std=cfg.stds)
+        )
+    test_loader = data.DataLoader(testset, batch_size=1, shuffle=False, num_workers=cfg.num_workers)
     # Model
     model = TextNet(backbone=cfg.net, is_training=True,use_atten=cfg.attn)
     if cfg.mgpu:
