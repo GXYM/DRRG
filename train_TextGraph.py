@@ -22,6 +22,10 @@ from util.option import BaseOptions
 from util.visualize import visualize_network_output
 from util.summary import LogSummary
 from util.shedule import FixLR
+
+from eval_script import evaluate_method
+import importlib
+import rrc_evaluation_funcs
 # import multiprocessing
 # multiprocessing.set_start_method("spawn", force=True)
 
@@ -37,15 +41,21 @@ def find_free_port():
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         return str(s.getsockname()[1])
 
-import visdom
-vis = visdom.Visdom(port=7007,server='localhost',base_url='/visdom')
-vis.line([[0.] * 7], [0], win='train_loss', opts=dict(title='train_loss',
-                        legend=['total loss', 'tr_loss', 'tcl_loss', 'sin_loss', 'cos_loss', 'radii_loss', 'gcn_loss']))
+# import visdom
+# vis = visdom.Visdom(port=7007,server='localhost',base_url='/visdom')
+# vis.line([[0.] * 7], [0], win='train_loss', opts=dict(title='train_loss',
+#                         legend=['total loss', 'tr_loss', 'tcl_loss', 'sin_loss', 'cos_loss', 'radii_loss', 'gcn_loss']))
+
+import mlflow.pytorch
 import warnings
 warnings.filterwarnings('ignore')
 
 lr = None
 train_step = 0
+losses = AverageMeter()
+batch_time = AverageMeter()
+data_time = AverageMeter()
+# end = time.time()
 
 date = datetime.now().strftime("%H%M-%d%m%y")
 
@@ -272,6 +282,15 @@ def main():
         transform=BaseTransform(size=cfg.test_size, mean=cfg.means, std=cfg.stds)
         )
     test_loader = data.DataLoader(testset, batch_size=1, shuffle=False, num_workers=cfg.num_workers)
+
+    from arg_parser import PARAMS
+    PARAMS.NUM_WORKERS = 8
+    module = importlib.import_module('eval_script')
+    
+    save_dir = os.path.join(cfg.save_dir, cfg.exp_name + date)
+    if not os.path.exists(save_dir):
+        mkdirs(save_dir)    
+    
     # Model
     model = TextNet(backbone=cfg.net, is_training=True,use_atten=cfg.attn)
     if cfg.mgpu:
