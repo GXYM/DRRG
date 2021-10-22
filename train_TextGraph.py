@@ -74,14 +74,86 @@ def load_model(model, model_path):
     state_dict = torch.load(model_path)
     model.load_state_dict(state_dict['model'])
 
+def step(model,
+        input,
+        iter,
+        loader_len,
+        criterion,
+        scheduler,
+        optimizer,
+        epoch,
+        logger,
+        end
+    ):
+    global train_step
+    global losses
+    global batch_time
+    global data_time
+    i = iter
+    data_time.update(time.time() - end)
+
+    train_step += 1
+    img, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map, gt_roi = input
+    img, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map \
+        = to_device(img, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map)
+
+    output, gcn_data = model(img, gt_roi, to_device)
+
+    tr_loss, tcl_loss, sin_loss, cos_loss, radii_loss, gcn_loss \
+        = criterion(output, gcn_data, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map)
+    loss = tr_loss + tcl_loss + sin_loss + cos_loss + radii_loss + gcn_loss
+
+    # backward
+    try:
+        optimizer.zero_grad()
+        loss.backward()
+    except:
+        print("loss gg")
+        pass
+
+    optimizer.step()
+
+    losses.update(loss.item())
+    # measure elapsed time
+    batch_time.update(time.time() - end)
+    end = time.time()
+    gc.collect()
+
+    if cfg.viz and i % cfg.viz_freq == 0:
+        visualize_network_output(output, tr_mask, tcl_mask[:, :, :, 0], mode='train')
+
+    if i % cfg.display_freq == 0:
+        print('({:d} / {:d})  Loss: {:.4f}  tr_loss: {:.4f}  tcl_loss: {:.4f}  '
+                'sin_loss: {:.4f}  cos_loss: {:.4f}  radii_loss: {:.4f}  gcn_loss: {:.4f}'
+                .format(i, loader_len, loss.item(), tr_loss.item(), tcl_loss.item(),
+                        sin_loss.item(), cos_loss.item(), radii_loss.item(), gcn_loss.item()))
+
+    if i % cfg.log_freq == 0:
+        logger.write_scalars({
+            'loss': loss.item(),
+            'tr_loss': tr_loss.item(),
+            'tcl_loss': tcl_loss.item(),
+            'sin_loss': sin_loss.item(),
+            'cos_loss': cos_loss.item(),
+            'radii_loss': radii_loss.item(),
+            'gcn_loss:': gcn_loss.item()
+        }, tag='train', n_iter=train_step)
+
+    mlflow.log_metric(key=f"Loss-train",       value=float(loss.item()), step=train_step)
+    mlflow.log_metric(key=f"Loss-tr-train",    value=float(tr_loss.item()), step=train_step)
+    mlflow.log_metric(key=f"Loss-tcl-train",   value=float(tcl_loss.item()), step=train_step)
+    mlflow.log_metric(key=f"Loss-sin-train",   value=float(sin_loss.item()), step=train_step)
+    mlflow.log_metric(key=f"Loss-cos-train",   value=float(cos_loss.item()), step=train_step)
+    mlflow.log_metric(key=f"Loss-radii-train", value=float(radii_loss.item()), step=train_step)
+    mlflow.log_metric(key=f"Loss-gcn-train",   value=float(gcn_loss.item()), step=train_step)    
 
 def train(model, train_loader, criterion, scheduler, optimizer, epoch, logger):
 
-    global train_step
+    # global train_step
 
-    losses = AverageMeter()
-    batch_time = AverageMeter()
-    data_time = AverageMeter()
+    # losses = AverageMeter()
+    # batch_time = AverageMeter()
+    # data_time = AverageMeter()
     end = time.time()
     model.train()
     # scheduler.step()
@@ -89,56 +161,18 @@ def train(model, train_loader, criterion, scheduler, optimizer, epoch, logger):
     print('Epoch: {} : LR = {}'.format(epoch, scheduler.get_lr()))
     loader_len = len(train_loader)
     for i, (img, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map, gt_roi) in enumerate(train_loader):
-        data_time.update(time.time() - end)
-
-        train_step += 1
-
-        img, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map \
-            = to_device(img, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map)
-
-        output, gcn_data = model(img, gt_roi, to_device)
-
-        tr_loss, tcl_loss, sin_loss, cos_loss, radii_loss, gcn_loss \
-            = criterion(output, gcn_data, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map)
-        loss = tr_loss + tcl_loss + sin_loss + cos_loss + radii_loss + gcn_loss
-
-        # backward
-        try:
-            optimizer.zero_grad()
-            loss.backward()
-        except:
-            print("loss gg")
-            continue
-
-        optimizer.step()
-
-        losses.update(loss.item())
-        # measure elapsed time
-        batch_time.update(time.time() - end)
-        end = time.time()
-        gc.collect()
-
-        if cfg.viz and i % cfg.viz_freq == 0:
-            visualize_network_output(output, tr_mask, tcl_mask[:, :, :, 0], mode='train')
-
-        if i % cfg.display_freq == 0:
-            print('({:d} / {:d})  Loss: {:.4f}  tr_loss: {:.4f}  tcl_loss: {:.4f}  '
-                  'sin_loss: {:.4f}  cos_loss: {:.4f}  radii_loss: {:.4f}  gcn_loss: {:.4f}'
-                  .format(i, len(train_loader), loss.item(), tr_loss.item(), tcl_loss.item(),
-                          sin_loss.item(), cos_loss.item(), radii_loss.item(), gcn_loss.item()))
-
-        if i % cfg.log_freq == 0:
-            logger.write_scalars({
-                'loss': loss.item(),
-                'tr_loss': tr_loss.item(),
-                'tcl_loss': tcl_loss.item(),
-                'sin_loss': sin_loss.item(),
-                'cos_loss': cos_loss.item(),
-                'radii_loss': radii_loss.item(),
-                'gcn_loss:': gcn_loss.item()
-            }, tag='train', n_iter=train_step)
-        vis.line([[loss.item(),tr_loss.item(),tcl_loss.item(),sin_loss.item(),cos_loss.item(),radii_loss.item(),gcn_loss.item()]], 
-        [i + loader_len * epoch], win='train_loss', update='append')
+        step(
+            model,
+            (img, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map,gt_roi),
+            i,
+            loader_len,
+            criterion,
+            scheduler,
+            optimizer,
+            epoch,
+            logger,
+            end
+        )
     if epoch % cfg.save_freq == 0:
         save_model(model, epoch, scheduler.get_lr(), optimizer)
 
