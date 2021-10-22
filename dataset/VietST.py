@@ -4,19 +4,19 @@ from dataset.data_util import pil_load_img
 from dataset.dataload import TextDataset, TextInstance
 from util.io import read_lines
 from util.misc import norm2
-
+import json
 import cv2
 
 
-class VietSceneText(TextDataset):
+class VietST(TextDataset):
 
     def __init__(self, data_root, is_training=True, transform=None, ignore_list=None):
         super().__init__(transform, is_training)
         self.data_root = data_root
         self.is_training = is_training
 
-        self.image_root = os.path.join(data_root, 'train' if is_training else 'test', "images")
-        self.annotation_root = os.path.join(data_root, 'train' if is_training else 'test', "labels")
+        self.image_root = os.path.join(data_root,'outimage_synth')
+        self.annotation_root = os.path.join(data_root,'outjson_synth')
         self.image_list = os.listdir(self.image_root)
         self.annotation_list = ['{}'.format(img_name.replace('.jpg', '').replace('.png','')) for img_name in self.image_list]
 
@@ -34,6 +34,30 @@ class VietSceneText(TextDataset):
             pts = np.stack([xx, yy]).T.astype(np.int32)
 
             label = line_split[-1]
+
+            d1 = norm2(pts[0] - pts[1])
+            d2 = norm2(pts[1] - pts[2])
+            d3 = norm2(pts[2] - pts[3])
+            d4 = norm2(pts[3] - pts[0])
+            if min([d1, d2, d3, d4]) < 2:
+                continue
+            polygons.append(TextInstance(pts, 'c', label))
+
+        return polygons
+
+    @staticmethod
+    def parse_json(gt_path):
+        json_data = json.load(open(gt_path + ".json"))
+
+        words = json_data['words']
+        polygons = []
+        for word in words:
+            
+            xx = word['points'][0]
+            yy = word['points'][1]
+            pts = np.stack([xx, yy]).T.astype(np.int32)
+
+            label = word['points']
 
             d1 = norm2(pts[0] - pts[1])
             d2 = norm2(pts[1] - pts[2])
@@ -63,7 +87,7 @@ class VietSceneText(TextDataset):
         # Read annotation
         annotation_id = self.annotation_list[item]
         annotation_path = os.path.join(self.annotation_root, annotation_id)
-        polygons = self.parse_txt(annotation_path)
+        polygons = self.parse_json(annotation_path)
 
         return self.get_training_data(image, polygons, image_id=image_id, image_path=image_path)
 
@@ -85,8 +109,8 @@ if __name__ == '__main__':
         size=640, mean=means, std=stds
     )
 
-    trainset = VietSceneText(
-        data_root='../data/VietSceneText',
+    trainset = VietST(
+        data_root='/mlcv/WorkingSpace/Projects/SceneText/thuyentd/source/SynthText/results_synth_100k_jpg/',
         is_training=True,
         transform=transform
     )
@@ -147,16 +171,16 @@ if __name__ == '__main__':
                         color = (0, 255, 0)
                     cv2.circle(img, (int(pp[0]), int(pp[1])), 2, color, -1)
                 cv2.drawContours(img, [np.array(boundary_point)], -1, (0, 255, 255), 1)
-        # print("nms time: {}".format(time.time() - t0))
+        print("nms time: {}".format(time.time() - t0))
         # # cv2.imshow("", img)
         # # cv2.waitKey(0)
 
-        # print(meta["image_id"])
-        cv2.imshow('imgs', img)
-        cv2.imshow("", cav.heatmap(np.array(labels * 255 / np.max(labels), dtype=np.uint8)))
-        cv2.imshow("tr_mask", cav.heatmap(np.array(tr_mask * 255 / np.max(tr_mask), dtype=np.uint8)))
-        cv2.imshow("tcl_mask",
-                   cav.heatmap(np.array(tcl_mask[:, :, 1] * 255 / np.max(tcl_mask[:, :, 1]), dtype=np.uint8)))
-        # cv2.imshow("top_map", cav.heatmap(np.array(top_map * 255 / np.max(top_map), dtype=np.uint8)))
-        # cv2.imshow("bot_map", cav.heatmap(np.array(bot_map * 255 / np.max(bot_map), dtype=np.uint8)))
-        cv2.waitKey(0)
+        print(meta["image_id"])
+        # cv2.imshow('imgs', img)
+        # cv2.imshow("", cav.heatmap(np.array(labels * 255 / np.max(labels), dtype=np.uint8)))
+        # cv2.imshow("tr_mask", cav.heatmap(np.array(tr_mask * 255 / np.max(tr_mask), dtype=np.uint8)))
+        # cv2.imshow("tcl_mask",
+        #            cav.heatmap(np.array(tcl_mask[:, :, 1] * 255 / np.max(tcl_mask[:, :, 1]), dtype=np.uint8)))
+        # # cv2.imshow("top_map", cav.heatmap(np.array(top_map * 255 / np.max(top_map), dtype=np.uint8)))
+        # # cv2.imshow("bot_map", cav.heatmap(np.array(bot_map * 255 / np.max(bot_map), dtype=np.uint8)))
+        # cv2.waitKey(0)

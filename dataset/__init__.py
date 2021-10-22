@@ -7,4 +7,4 @@ from .Icdar17_Text import Mlt2017Text
 from .TD500_Text import TD500Text
 from .VietSceneText import VietSceneText
 from .VinText import VinText
-
+from .VietST import VietST
