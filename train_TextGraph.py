@@ -293,6 +293,7 @@ def main():
     
     # Model
     model = TextNet(backbone=cfg.net, is_training=True,use_atten=cfg.attn)
+    detector = TextDetector_graph(model)
     if cfg.mgpu:
         model = nn.DataParallel(model)
 
@@ -307,21 +308,38 @@ def main():
 
     lr = cfg.lr
     moment = cfg.momentum
-    if cfg.optim == "Adam" or cfg.exp_name == 'Synthtext':
+    if cfg.optim == "Adam" or cfg.exp_name == 'Synthtext' or cfg.exp_name == 'VietST':
         optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     else:
         optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=moment)
 
-    if cfg.exp_name == 'Synthtext':
+    if cfg.exp_name == 'Synthtext' or cfg.exp_name == 'VietST':
         scheduler = FixLR(optimizer)
     else:
         scheduler = lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.90)
 
     print('Start training TextGraph.')
-    for epoch in range(cfg.start_epoch, cfg.start_epoch + cfg.max_epoch+1):
-        scheduler.step()
-        train(model, train_loader, criterion, scheduler, optimizer, epoch, logger)
+    mlflow.set_tracking_uri("http://127.0.0.1:7006")
+    mlflow.set_experiment(os.path.join(cfg.save_dir, cfg.exp_name + date))
+    with mlflow.start_run() as run: 
+        for epoch in range(cfg.start_epoch, cfg.start_epoch + cfg.max_epoch+1):
+            scheduler.step()
+            detector.train()
+            train(model, train_loader, criterion, scheduler, optimizer, epoch, logger)
 
+            detector.eval()
+            now = datetime.now()
+            output_dir = os.path.join(cfg.output_dir, cfg.exp_name+now.strftime("%d-%m-%Y_%H-%M-%S"))
+            inference(detector, test_loader, output_dir)
+            out = os.popen('zip -rj {}.zip {}'.format(output_dir,output_dir)).read()
+
+            p = {}
+            p['g'] = "./gt/evalSampling_VietSignboard.zip"
+            p['s'] = "./gt/{}.zip".format(output_dir)
+            resDict = rrc_evaluation_funcs.main_evaluation(p,module.default_evaluation_params,module.validate_data,evaluate_method,save_name=now.strftime("%d-%m-%Y_%H-%M-%S"))
+            mlflow.log_metric(key=f"Recall",    value=resDict['recall'], step=epoch)
+            mlflow.log_metric(key=f"Precision", value=resDict['precision'], step=epoch)
+            mlflow.log_metric(key=f"H-mean",    value=resDict['hmean'], step=epoch)
     print('End.')
 
     if torch.cuda.is_available():
