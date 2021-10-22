@@ -9,7 +9,9 @@ import torch.backends.cudnn as cudnn
 import torch.utils.data as data
 from torch.optim import lr_scheduler
 
-from dataset import SynthText, TotalText, Ctw1500Text, Icdar15Text, Mlt2017Text, TD500Text , VietSceneText, VinText
+from dataset import SynthText, TotalText, Ctw1500Text, Icdar15Text, Mlt2017Text, TD500Text , VietSceneText, VinText, VietST
+from util.detection_graph import TextDetector as TextDetector_graph
+from eval_TextGraph import inference
 from network.loss import TextLoss
 from network.textnet import TextNet
 from util.augmentation import Augmentation
