@@ -107,11 +107,8 @@ class TextNet(nn.Module):
         )
 
         # ## gcn branch
-        if is_training:
-            self.graph = KnnGraph(self.k_at_hop, self.active_connection, self.pooling, 120, self.is_training)
-        else:
-            self.graph = Graph_RPN(self.pooling, 120)
-
+        self.graphTrain = KnnGraph(self.k_at_hop, self.active_connection, self.pooling, 120, self.is_training)
+        self.graphTest = Graph_RPN(self.pooling, 120)
     def load_model(self, model_path):
         print('Loading from {}'.format(model_path))
         state_dict = torch.load(model_path)
@@ -122,7 +119,7 @@ class TextNet(nn.Module):
         predict_out = self.predict(up1)
 
         graph_feat = torch.cat([up1, predict_out], dim=1)
-        feat_batch, adj_batch, h1id_batch, gtmat_batch = self.graph(graph_feat, roi_data)
+        feat_batch, adj_batch, h1id_batch, gtmat_batch = self.graphTrain(graph_feat, roi_data)
         gcn_pred = self.gcn_model(feat_batch, adj_batch, h1id_batch)
 
         return predict_out, (gcn_pred, to_device(gtmat_batch))
@@ -139,7 +136,7 @@ class TextNet(nn.Module):
 
         graph_feat = torch.cat([up1, predict_out], dim=1)
 
-        flag, datas = self.graph(img, predict_out, graph_feat)
+        flag, datas = self.graphTest(img, predict_out, graph_feat)
         feat, adj, cid, h1id, node_list, proposals, output = datas
         if flag:
 
