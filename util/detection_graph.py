@@ -146,6 +146,8 @@ class TextDetector(object):
 
         return bbox_contours
 
-
-
+    def eval(self):
+        self.model.eval()
+    def train(self):
+        self.model.train()
 
