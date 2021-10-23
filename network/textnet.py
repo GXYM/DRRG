@@ -152,15 +152,24 @@ class TextNet(nn.Module):
         node_list = node_list.long().squeeze().cpu().numpy()
         bs = feat.size(0)
 
-        for b in range(bs):
-            cidb = cid[b].int().item()
-            nl = node_list[b]
-            for j, n in enumerate(h1id[b]):
-                n = n.item()
-                edges.append([nl[cidb], nl[n]])
-                scores.append(pred[b * (h1id.shape[1]) + j, 1].item())
+        # for pivot_ind, pivot_local_graph in enumerate(node_list):
+        try:
+            for b in range(bs):
+                cidb = cid[b].int().item()
+                nl = node_list[b]
+                for j, n in enumerate(h1id[b]):
+                    n = n.item()
+                    edges.append([nl[cidb], nl[n]])
+                    scores.append(pred[b * (h1id.shape[1]) + j, 1].item())
+        except:
+            pass
 
+            # for k_ind, neighbor_ind in enumerate(h1id[pivot_ind]):
+            #     edges.append([pivot_local_graph[0], pivot_local_graph[neighbor_ind.item()]])
+            #     scores.append(pred[pivot_ind * (h1id.shape[1]) + k_ind, 1].item())
+        if len(edges) == 0:
+            return None, None, None, output
         edges = np.asarray(edges)
+        # print(edges)
         scores = np.asarray(scores)
-
         return edges, scores, proposals, output
