@@ -41,80 +41,160 @@ def write_to_file(contours, file_path):
             cont = cont.flatten().astype(str).tolist()
             cont = ','.join(cont)
             f.write(cont + '\n')
+total_time = 0.
+def step(detector,
+        input,
+        iter,
+        loader_len,
+        output_dir
+    ):
 
+    image, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map, meta = input
+    image, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map = to_device(
+        image, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map)
+
+    i = iter
+    global total_time
+    torch.cuda.synchronize()
+    start = time.time()
+
+    idx = 0 # test mode can only run with batch_size == 1
+
+    # visualization
+    img_show = image[idx].permute(1, 2, 0).cpu().numpy()
+    img_show = ((img_show * cfg.stds + cfg.means) * 255).astype(np.uint8)
+
+    # get detection result
+    contours, output = detector.detect(image, img_show)
+    tr_pred, tcl_pred = output['tr'], output['tcl']
+
+    torch.cuda.synchronize()
+    end = time.time()
+    total_time += end - start
+    fps = (i + 1) / total_time
+    print('detect {} / {} images: {}. ({:.2f} fps)'.format(i + 1, loader_len, meta['image_id'][idx], fps))
+
+    pred_vis = visualize_detection(img_show, contours, tr_pred[1], tcl_pred[1])
+
+    gt_contour = []
+    for annot, n_annot in zip(meta['annotation'][idx], meta['n_annotation'][idx]):
+        if n_annot.item() > 0:
+            gt_contour.append(annot[:n_annot].int().cpu().numpy())
+    gt_vis = visualize_gt(img_show, gt_contour,
+                        tr_mask[idx].cpu().numpy(), tcl_mask[idx, :, :, 0].cpu().numpy())
+    im_vis = np.concatenate([pred_vis, gt_vis], axis=0)
+    # path = os.path.join(cfg.vis_dir, '{}_test'.format(cfg.exp_name), meta['image_id'][idx])
+    # cv2.imwrite(path, im_vis)
+
+    H, W = meta['Height'][idx].item(), meta['Width'][idx].item()
+    img_show, contours = rescale_result(img_show, contours, H, W)
+
+    # write to file
+    if cfg.exp_name == "Icdar2015":
+        fname = "res_" + meta['image_id'][idx].replace('jpg', 'txt')
+        contours = data_transfer_ICDAR(contours)
+        write_to_file(contours, os.path.join(output_dir, fname))
+    elif cfg.exp_name == "MLT2017":
+        path = os.path.join(cfg.vis_dir, '{}_test'.format(cfg.exp_name),
+                            meta['image_id'][idx].split("/")[-1])
+        cv2.imwrite(path, im_vis)
+
+        out_dir = os.path.join(output_dir, str(cfg.checkepoch))
+        if not os.path.exists(out_dir):
+            mkdirs(out_dir)
+        fname = meta['image_id'][idx].split("/")[-1].replace('ts', 'res')
+        fname = fname.split(".")[0] + ".txt"
+        data_transfer_MLT2017(contours, os.path.join(out_dir, fname))
+    elif cfg.exp_name == "TD500":
+        fname = "res_img_" + meta['image_id'][idx].replace('jpg', 'txt')
+        data_transfer_TD500(contours, os.path.join(output_dir, fname))
+    elif cfg.exp_name == "VietSceneText": 
+        fname = meta['image_id'][idx].replace('jpg', 'txt')
+        data_transfer_VietSceneText(contours, os.path.join(output_dir, fname))
+    else:
+        fname = meta['image_id'][idx].replace('jpg', 'txt')
+        write_to_file(contours, os.path.join(output_dir, fname))
 
 def inference(detector, test_loader, output_dir):
 
-    total_time = 0.
+    # total_time = 0.
     if cfg.exp_name != "MLT2017":
         osmkdir(output_dir)
     else:
         if not os.path.exists(output_dir):
             mkdirs(output_dir)
-    for i, (image, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map, meta) in enumerate(test_loader):
+    loader_len = len(test_loader)
+    with torch.no_grad():
+        for i, (image, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map, meta) in enumerate(test_loader):
+            step(
+                detector,
+                (image, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map, meta),
+                i,
+                loader_len,
+                output_dir
+            )
+            # image, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map = to_device(
+            #     image, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map)
 
-        image, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map = to_device(
-            image, train_mask, tr_mask, tcl_mask, radius_map, sin_map, cos_map)
+            # torch.cuda.synchronize()
+            # start = time.time()
 
-        torch.cuda.synchronize()
-        start = time.time()
+            # idx = 0 # test mode can only run with batch_size == 1
 
-        idx = 0 # test mode can only run with batch_size == 1
+            # # visualization
+            # img_show = image[idx].permute(1, 2, 0).cpu().numpy()
+            # img_show = ((img_show * cfg.stds + cfg.means) * 255).astype(np.uint8)
 
-        # visualization
-        img_show = image[idx].permute(1, 2, 0).cpu().numpy()
-        img_show = ((img_show * cfg.stds + cfg.means) * 255).astype(np.uint8)
+            # # get detection result
+            # contours, output = detector.detect(image, img_show)
+            # tr_pred, tcl_pred = output['tr'], output['tcl']
 
-        # get detection result
-        contours, output = detector.detect(image, img_show)
-        tr_pred, tcl_pred = output['tr'], output['tcl']
+            # torch.cuda.synchronize()
+            # end = time.time()
+            # total_time += end - start
+            # fps = (i + 1) / total_time
+            # print('detect {} / {} images: {}. ({:.2f} fps)'.format(i + 1, len(test_loader), meta['image_id'][idx], fps))
 
-        torch.cuda.synchronize()
-        end = time.time()
-        total_time += end - start
-        fps = (i + 1) / total_time
-        print('detect {} / {} images: {}. ({:.2f} fps)'.format(i + 1, len(test_loader), meta['image_id'][idx], fps))
+            # pred_vis = visualize_detection(img_show, contours, tr_pred[1], tcl_pred[1])
 
-        pred_vis = visualize_detection(img_show, contours, tr_pred[1], tcl_pred[1])
+            # gt_contour = []
+            # for annot, n_annot in zip(meta['annotation'][idx], meta['n_annotation'][idx]):
+            #     if n_annot.item() > 0:
+            #         gt_contour.append(annot[:n_annot].int().cpu().numpy())
+            # gt_vis = visualize_gt(img_show, gt_contour,
+            #                     tr_mask[idx].cpu().numpy(), tcl_mask[idx, :, :, 0].cpu().numpy())
+            # im_vis = np.concatenate([pred_vis, gt_vis], axis=0)
+            # # path = os.path.join(cfg.vis_dir, '{}_test'.format(cfg.exp_name), meta['image_id'][idx])
+            # # cv2.imwrite(path, im_vis)
 
-        gt_contour = []
-        for annot, n_annot in zip(meta['annotation'][idx], meta['n_annotation'][idx]):
-            if n_annot.item() > 0:
-                gt_contour.append(annot[:n_annot].int().cpu().numpy())
-        gt_vis = visualize_gt(img_show, gt_contour,
-                              tr_mask[idx].cpu().numpy(), tcl_mask[idx, :, :, 0].cpu().numpy())
-        im_vis = np.concatenate([pred_vis, gt_vis], axis=0)
-        # path = os.path.join(cfg.vis_dir, '{}_test'.format(cfg.exp_name), meta['image_id'][idx])
-        # cv2.imwrite(path, im_vis)
+            # H, W = meta['Height'][idx].item(), meta['Width'][idx].item()
+            # img_show, contours = rescale_result(img_show, contours, H, W)
 
-        H, W = meta['Height'][idx].item(), meta['Width'][idx].item()
-        img_show, contours = rescale_result(img_show, contours, H, W)
+            # # write to file
+            # if cfg.exp_name == "Icdar2015":
+            #     fname = "res_" + meta['image_id'][idx].replace('jpg', 'txt')
+            #     contours = data_transfer_ICDAR(contours)
+            #     write_to_file(contours, os.path.join(output_dir, fname))
+            # elif cfg.exp_name == "MLT2017":
+            #     path = os.path.join(cfg.vis_dir, '{}_test'.format(cfg.exp_name),
+            #                         meta['image_id'][idx].split("/")[-1])
+            #     cv2.imwrite(path, im_vis)
 
-        # write to file
-        if cfg.exp_name == "Icdar2015":
-            fname = "res_" + meta['image_id'][idx].replace('jpg', 'txt')
-            contours = data_transfer_ICDAR(contours)
-            write_to_file(contours, os.path.join(output_dir, fname))
-        elif cfg.exp_name == "MLT2017":
-            path = os.path.join(cfg.vis_dir, '{}_test'.format(cfg.exp_name),
-                                meta['image_id'][idx].split("/")[-1])
-            cv2.imwrite(path, im_vis)
-
-            out_dir = os.path.join(output_dir, str(cfg.checkepoch))
-            if not os.path.exists(out_dir):
-                mkdirs(out_dir)
-            fname = meta['image_id'][idx].split("/")[-1].replace('ts', 'res')
-            fname = fname.split(".")[0] + ".txt"
-            data_transfer_MLT2017(contours, os.path.join(out_dir, fname))
-        elif cfg.exp_name == "TD500":
-            fname = "res_img_" + meta['image_id'][idx].replace('jpg', 'txt')
-            data_transfer_TD500(contours, os.path.join(output_dir, fname))
-        elif cfg.exp_name == "VietSceneText": 
-            fname = meta['image_id'][idx].replace('jpg', 'txt')
-            data_transfer_VietSceneText(contours, os.path.join(output_dir, fname))
-        else:
-            fname = meta['image_id'][idx].replace('jpg', 'txt')
-            write_to_file(contours, os.path.join(output_dir, fname))
+            #     out_dir = os.path.join(output_dir, str(cfg.checkepoch))
+            #     if not os.path.exists(out_dir):
+            #         mkdirs(out_dir)
+            #     fname = meta['image_id'][idx].split("/")[-1].replace('ts', 'res')
+            #     fname = fname.split(".")[0] + ".txt"
+            #     data_transfer_MLT2017(contours, os.path.join(out_dir, fname))
+            # elif cfg.exp_name == "TD500":
+            #     fname = "res_img_" + meta['image_id'][idx].replace('jpg', 'txt')
+            #     data_transfer_TD500(contours, os.path.join(output_dir, fname))
+            # elif cfg.exp_name == "VietSceneText": 
+            #     fname = meta['image_id'][idx].replace('jpg', 'txt')
+            #     data_transfer_VietSceneText(contours, os.path.join(output_dir, fname))
+            # else:
+            #     fname = meta['image_id'][idx].replace('jpg', 'txt')
+            #     write_to_file(contours, os.path.join(output_dir, fname))
 
 
 def main(vis_dir_path):

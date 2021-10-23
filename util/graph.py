@@ -304,6 +304,9 @@ def single_remove(bbox, pred):
         if np.sum(idcs) == 1:
             single_idcs[np.where(idcs)[0][0]] = 1
     remain_idcs = [i for i in range(len(pred)) if not single_idcs[i]]
+    if len(remain_idcs) == 0:
+        return [], []
+    # arrays used as indices must be of integer (or boolean) type -> empty list
     remain_idcs = np.asarray(remain_idcs)
     return bbox[remain_idcs, :], pred[remain_idcs]
 

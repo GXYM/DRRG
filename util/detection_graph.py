@@ -91,7 +91,8 @@ class TextDetector(object):
             # find text contours
             contours = self.detect_contours(bboxs, final_pred)
             # contours = self.adjust_contours(img_show, contours)
-
+            if len(contours) == 0:
+                return [], output
         return contours, output
 
     def adjust_contours(self, image, all_contours):

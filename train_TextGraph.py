@@ -321,12 +321,14 @@ def main():
     print('Start training TextGraph.')
     mlflow.set_tracking_uri("http://127.0.0.1:7006")
     mlflow.set_experiment(os.path.join(cfg.save_dir, cfg.exp_name + date))
+    cfg_dict = vars(cfg)
+    for key in cfg_dict:
+        print(key, cfg_dict[key])
     with mlflow.start_run() as run: 
+        for key in cfg_dict:
+            if key in ['lr','batch_size','weight_decay','gamma','momentum','optim']:
+                mlflow.log_param(key, cfg_dict[key])
         for epoch in range(cfg.start_epoch, cfg.start_epoch + cfg.max_epoch+1):
-            scheduler.step()
-            detector.train()
-            train(model, train_loader, criterion, scheduler, optimizer, epoch, logger)
-
             detector.eval()
             now = datetime.now()
             output_dir = os.path.join(cfg.output_dir, cfg.exp_name+now.strftime("%d-%m-%Y_%H-%M-%S"))
@@ -335,11 +337,15 @@ def main():
 
             p = {}
             p['g'] = "./gt/evalSampling_VietSignboard.zip"
-            p['s'] = "./gt/{}.zip".format(output_dir)
+            p['s'] = "./{}.zip".format(output_dir)
             resDict = rrc_evaluation_funcs.main_evaluation(p,module.default_evaluation_params,module.validate_data,evaluate_method,save_name=now.strftime("%d-%m-%Y_%H-%M-%S"))
-            mlflow.log_metric(key=f"Recall",    value=resDict['recall'], step=epoch)
-            mlflow.log_metric(key=f"Precision", value=resDict['precision'], step=epoch)
-            mlflow.log_metric(key=f"H-mean",    value=resDict['hmean'], step=epoch)
+            mlflow.log_metric(key=f"Recall",    value=resDict['method']['recall'], step=epoch)
+            mlflow.log_metric(key=f"Precision", value=resDict['method']['precision'], step=epoch)
+            mlflow.log_metric(key=f"H-mean",    value=resDict['method']['hmean'], step=epoch)
+            scheduler.step()
+            detector.train()
+            train(model, train_loader, criterion, scheduler, optimizer, epoch, logger)
+
     print('End.')
 
     if torch.cuda.is_available():
