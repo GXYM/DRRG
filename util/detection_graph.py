@@ -87,12 +87,11 @@ class TextDetector(object):
             clusters = graph_propagation_naive(edges, scores, cfg.link_thresh)
             final_pred = clusters2labels(clusters, bboxs.shape[0])
             bboxs, final_pred = single_remove(bboxs, final_pred)
-
+            if len(final_pred) == 0:
+                return [],output
             # find text contours
             contours = self.detect_contours(bboxs, final_pred)
             # contours = self.adjust_contours(img_show, contours)
-            if len(contours) == 0:
-                return [], output
         return contours, output
 
     def adjust_contours(self, image, all_contours):

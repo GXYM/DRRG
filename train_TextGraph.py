@@ -77,8 +77,8 @@ def save_model(model, epoch, lr, optimzer):
         'optimizer': optimzer.state_dict()
     }
     torch.save(state_dict, save_path)
-
-
+    save_path_latest = os.path.join(save_dir, 'textgraph_{}_{}.pth'.format(model_name , "latest"))
+    torch.save(state_dict, save_path_latest)
 def load_model(model, model_path):
     print('Loading from {}'.format(model_path))
     state_dict = torch.load(model_path)
@@ -320,11 +320,16 @@ def main():
 
     print('Start training TextGraph.')
     mlflow.set_tracking_uri("http://127.0.0.1:7006")
-    mlflow.set_experiment(os.path.join(cfg.save_dir, cfg.exp_name + date))
+    prefix_exper_name = cfg.exp_name
+    exper_name = prefix_exper_name + "-attn" if cfg.attn else prefix_exper_name + "-gnn"
+    mlflow.set_experiment(os.path.join(cfg.save_dir, exper_name))
     cfg_dict = vars(cfg)
     for key in cfg_dict:
         print(key, cfg_dict[key])
-    with mlflow.start_run() as run: 
+    save_dir = os.path.join(cfg.save_dir, cfg.exp_name + date)
+    if not os.path.exists(save_dir):
+        mkdirs(save_dir)
+    with mlflow.start_run(run_name=cfg.exp_name + date) as run: 
         for key in cfg_dict:
             if key in ['lr','batch_size','weight_decay','gamma','momentum','optim']:
                 mlflow.log_param(key, cfg_dict[key])

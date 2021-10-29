@@ -31,7 +31,7 @@ class GraphAttentionLayer(nn.Module):
 
         self.W = nn.Parameter(torch.empty(size=(self.in_features, self.out_features)))
         nn.init.xavier_uniform_(self.W.data, gain=1.414)
-        self.a = nn.Parameter(torch.empty(size=(self.out_features, 1)))
+        self.a = nn.Parameter(torch.empty(size=(2*self.out_features, 1)))
         nn.init.xavier_uniform_(self.a.data, gain=1.414)
 
         self.leakyrelu = nn.LeakyReLU(self.alpha)
@@ -66,21 +66,30 @@ class GraphAttentionLayer(nn.Module):
             return h_prime
 
     def _prepare_attentional_mechanism_input(self, Wh):
-        e = torch.matmul(Wh,self.a)
+        # e = torch.matmul(Wh,self.a)
+        # return self.leakyrelu(e)
+        Wh1 = torch.matmul(Wh, self.a[:self.out_features, :])
+        Wh2 = torch.matmul(Wh, self.a[self.out_features:, :])
+        # broadcast add
+        e = Wh1 + Wh2.permute(0,2,1)
         return self.leakyrelu(e)
-
     def __repr__(self):
         return self.__class__.__name__ + ' (' + str(self.in_features) + ' -> ' + str(self.out_features) + ')'
 
 class GAT(nn.Module):
-    def __init__(self, nfeat, nhid, nclass, dropout, alpha, nheads):
+    def __init__(self, nfeat, nlayer, nhid, nclass, dropout, alpha, nheads):
         """Dense version of GAT."""
         super(GAT, self).__init__()
         self.dropout = dropout
-
-        self.attentions = [GraphAttentionLayer(nfeat, nhid, dropout=dropout, alpha=alpha, concat=True) for _ in range(nheads)]
-        for i, attention in enumerate(self.attentions):
-            self.add_module('attention_{}'.format(i), attention)
+        self.nlayer = nlayer
+        self.attentions = {}
+        for j in range(self.nlayer):
+            if j == 0:
+                self.attentions[j] = [GraphAttentionLayer(nfeat, nhid, dropout=dropout, alpha=alpha, concat=True) for _ in range(nheads)]
+            else:
+                self.attentions[j] = [GraphAttentionLayer(nhid * nheads, nhid, dropout=dropout, alpha=alpha, concat=True) for _ in range(nheads)]
+            for i, attention in enumerate(self.attentions[j]):
+                self.add_module('attention_{}_{}'.format(j,i), attention)
 
         self.out_att = GraphAttentionLayer(nhid * nheads, nhid, dropout=dropout, alpha=alpha, concat=False)
         self.agg = MeanAggregator()
@@ -94,8 +103,9 @@ class GAT(nn.Module):
 
 
         X = F.dropout(X, self.dropout, training=self.training)
+        for j in range(self.nlayer):
 
-        X = torch.cat([att( X ,adj) for att in self.attentions], dim=2)
+            X = torch.cat([att( X ,adj) for att in self.attentions[j]], dim=2)
 
         X = F.dropout(X, self.dropout, training=self.training)
 
