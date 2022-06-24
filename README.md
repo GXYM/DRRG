@@ -1,5 +1,7 @@
  This is an implementation of “[Deep relational reasoning graph network for arbitrary shape text detection](http://arxiv.org/abs/2003.07493)”.
 ![](https://github.com/GXYM/DRRG/blob/master/result/img2_0.png)
+
+Note: 0ur new work at https://github.com/GXYM/TextBPN-Plus-Plus.
 ## Prerequisites  
 **python 3.7**;  
 **PyTorch 1.2.0**;   
