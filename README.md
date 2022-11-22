@@ -3,7 +3,7 @@
 
 ## News
 - [x]  Our new work at [https://github.com/GXYM/TextBPN-Plus-Plus](https://github.com/GXYM/TextBPN-Plus-Plus).
-- [x]  The implementation of Paddle for this project  in  [DRRG_Paddle](https://github.com/zhiminzhang0830/DRRG_Paddle)
+- [x]  This project is reproduced by Paddle implementation in  [DRRG_Paddle](https://github.com/zhiminzhang0830/DRRG_Paddle)
 - [x]  This project is reproduced in [MMOCR](https://github.com/open-mmlab/mmocr).  
 
 
