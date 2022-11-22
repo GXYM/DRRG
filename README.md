@@ -12,7 +12,8 @@
 **PyTorch 1.2.0**;   
 **Numpy >=1.16**;   
 **CUDA 10.1**;  
-**GCC >=9.0**;   
+**GCC >=9.0**;  
+**opencv-python < 4.5.0**  
 **NVIDIA GPU(with 10G or larger GPU memory for inference)**;   
 
  ## Compile  
