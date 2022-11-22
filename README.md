@@ -2,8 +2,8 @@
 ![](https://github.com/GXYM/DRRG/blob/master/result/img2_0.png)
 
 ## News
-- [x]  Our new work at [https://github.com/GXYM/TextBPN-Plus-Plus](https://github.com/GXYM/TextBPN-Plus-Plus).
-- [x]  This project is reproduced by Paddle implementation in  [DRRG_Paddle](https://github.com/zhiminzhang0830/DRRG_Paddle)
+- [x]  Our new work at [https://github.com/GXYM/TextBPN-Plus-Plus](https://github.com/GXYM/TextBPN-Plus-Plus).  
+- [x]  This project is reproduced by Paddle implementation in  [DRRG_Paddle](https://github.com/zhiminzhang0830/DRRG_Paddle). Description of reproduce is in [Paddle AI Studio](https://aistudio.baidu.com/aistudio/projectdetail/4595172)   
 - [x]  This project is reproduced in [MMOCR](https://github.com/open-mmlab/mmocr).  
 
 
