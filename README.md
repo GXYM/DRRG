@@ -3,8 +3,10 @@
 
 ## News
 - [x]  Our new work at [https://github.com/GXYM/TextBPN-Plus-Plus](https://github.com/GXYM/TextBPN-Plus-Plus).  
-- [x]  This project is reproduced by Paddle implementation in  [DRRG_Paddle](https://github.com/zhiminzhang0830/DRRG_Paddle). Description of reproduce is in [Paddle AI Studio](https://aistudio.baidu.com/aistudio/projectdetail/4595172)   
 - [x]  This project is reproduced in [MMOCR](https://github.com/open-mmlab/mmocr).  
+- [x]  This project is reproduced in [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/doc/doc_en/algorithm_det_drrg_en.md).
+- [x]  This project is reproduced by Paddle implementation in  [DRRG_Paddle](https://github.com/zhiminzhang0830/DRRG_Paddle). Description of reproduce is in [Paddle AI Studio](https://aistudio.baidu.com/aistudio/projectdetail/4595172)   
+
 
 
 ## Prerequisites  
