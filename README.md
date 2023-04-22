@@ -29,6 +29,10 @@ Note:  download the data and put it under the data file
 2. [TD500](https://drive.google.com/file/d/1ByluLnyd8-Ltjo9AC-1m7omZnI-FA1u0/view?usp=sharing)  
 3. [Total-Text](https://drive.google.com/file/d/17_7T_-2Bu3KSSg2OkXeCxj97TBsjvueC/view?usp=sharing)  
 
+## Models
+ *  The trained models of Total-Text, CTW-1500 model, MSRA-TD500, MLT2017, Icdar2015 all in here.   
+ [Google Drive](https://drive.google.com/file/d/1xH-jfhTO7grgk-P3kjzBDWstjjb0PYJY/view?usp=share_link) or [Baidu Drive](https://pan.baidu.com/s/1dDZwkK3PDJh0Mr903kWD8g) (download code: cfat)
+
 
 ## Train
 ```
