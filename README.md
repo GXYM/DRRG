@@ -62,13 +62,70 @@ python  batch_eval.py #  Testing multi round models
 ![screenshot](https://github.com/GXYM/DRRG/blob/master/result/screenshot_22.png)  
 
 ## References  
-@InProceedings{Zhang_2020_CVPR,
-author = {Zhang, Shi-Xue and Zhu, Xiaobin and Hou, Jie-Bo and Liu, Chang and Yang, Chun and Wang, Hongfa and Yin, Xu-Cheng},
-title = {Deep Relational Reasoning Graph Network for Arbitrary Shape Text Detection},
-booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-month = {June},
-year = {2020}
-}  
+```
+@inproceedings{DBLP:conf/cvpr/ZhangZHLYWY20,
+  author       = {Shi{-}Xue Zhang and
+                  Xiaobin Zhu and
+                  Jie{-}Bo Hou and
+                  Chang Liu and
+                  Chun Yang and
+                  Hongfa Wang and
+                  Xu{-}Cheng Yin},
+  title        = {Deep Relational Reasoning Graph Network for Arbitrary Shape Text Detection},
+  booktitle    = {2020 {IEEE/CVF} Conference on Computer Vision and Pattern Recognition,
+                  {CVPR} 2020, Seattle, WA, USA, June 13-19, 2020},
+  pages        = {9696--9705},
+  publisher    = {Computer Vision Foundation / {IEEE}},
+  year         = {2020},
+  doi          = {10.1109/CVPR42600.2020.00972},
+}
+
+@inproceedings{DBLP:conf/iccv/Zhang0YWY21,
+  author    = {Shi{-}Xue Zhang and
+               Xiaobin Zhu and
+               Chun Yang and
+               Hongfa Wang and
+               Xu{-}Cheng Yin},
+  title     = {Adaptive Boundary Proposal Network for Arbitrary Shape Text Detection},
+  booktitle = {2021 {IEEE/CVF} International Conference on Computer Vision, {ICCV} 2021, Montreal, QC, Canada, October 10-17, 2021},
+  pages     = {1285--1294},
+  publisher = {{IEEE}},
+  year      = {2021},
+}
+
+@article{zhang2023arbitrary,
+  title={Arbitrary shape text detection via boundary transformer},
+  author={Zhang, Shi-Xue and Yang, Chun and Zhu, Xiaobin and Yin, Xu-Cheng},
+  journal={IEEE Transactions on Multimedia},
+  year={2023},
+  publisher={IEEE}
+}
+
+@article{DBLP:journals/pami/ZhangZCHY23,
+  author       = {Shi{-}Xue Zhang and
+                  Xiaobin Zhu and
+                  Lei Chen and
+                  Jie{-}Bo Hou and
+                  Xu{-}Cheng Yin},
+  title        = {Arbitrary Shape Text Detection via Segmentation With Probability Maps},
+  journal      = {{IEEE} Trans. Pattern Anal. Mach. Intell.},
+  volume       = {45},
+  number       = {3},
+  pages        = {2736--2750},
+  year         = {2023},
+  url          = {https://doi.org/10.1109/TPAMI.2022.3176122},
+  doi          = {10.1109/TPAMI.2022.3176122},
+}
+
+@article{zhang2022kernel,
+  title={Kernel proposal network for arbitrary shape text detection},
+  author={Zhang, Shi-Xue and Zhu, Xiaobin and Hou, Jie-Bo and Yang, Chun and Yin, Xu-Cheng},
+  journal={IEEE Transactions on Neural Networks and Learning Systems},
+  year={2022},
+  publisher={IEEE}
+}
+
+```
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/GXYM/DRRG/blob/master/LICENSE.md) file for details
 
