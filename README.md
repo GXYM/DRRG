@@ -61,7 +61,7 @@ python  batch_eval.py #  Testing multi round models
 
 ![screenshot](https://github.com/GXYM/DRRG/blob/master/result/screenshot_22.png)  
 
-## References  
+## Citing the related works 
 ```
 @inproceedings{DBLP:conf/cvpr/ZhangZHLYWY20,
   author       = {Shi{-}Xue Zhang and
